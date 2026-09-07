@@ -9,6 +9,7 @@ uv run ruff format --check .
 uv run pyright
 uv run pytest
 uv build
+uv run scripts/check_dist.py
 ```
 
 Tests use real loopback HTTP, CLI and MCP subprocesses, and SQLite. They do not contact WhatsApp. MCP checks cover both current discovery and legacy initialization. The lockfile records the exact tested dependency set; update it deliberately and verify new SDK contracts against official source.

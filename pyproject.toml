@@ -29,6 +29,9 @@ exclude-newer = "7 days"
 [tool.hatch.build.targets.wheel]
 packages = ["src/evoctl"]
 
+[tool.hatch.build.targets.sdist]
+only-include = ["src/evoctl", "tests", "scripts", "docs", "README.md", "LICENSE", "NOTICE", "SECURITY.md", "CONTRIBUTING.md", "AGENTS.md", "pyproject.toml", "uv.lock"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
