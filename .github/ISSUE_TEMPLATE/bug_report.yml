@@ -1,0 +1,28 @@
+name: Report a bug
+description: A command, MCP action, or Evolution route behaved unexpectedly.
+title: "bug: "
+body:
+  - type: markdown
+    attributes:
+      value: "Share a minimal reproduction. Remove credentials, private messages, and personal contact identifiers."
+  - type: input
+    id: versions
+    attributes:
+      label: Versions and connection
+      description: evoctl version, Evolution API version, OS, and HTTP or SSH.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Command or MCP action
+      description: Include the operation name and a sanitized minimal input.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and observed behavior
+      description: Include the structured error code when available.
+    validations:
+      required: true

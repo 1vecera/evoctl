@@ -1,0 +1,18 @@
+name: Propose a workflow
+description: Describe the task you want evoctl to make easier.
+title: "workflow: "
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: What are you trying to do?
+      description: Describe the user or agent workflow and where it gets stuck.
+    validations:
+      required: true
+  - type: textarea
+    id: interface
+    attributes:
+      label: What would a useful command or action look like?
+      description: An example input and desired result help make the proposal concrete.
+    validations:
+      required: true
