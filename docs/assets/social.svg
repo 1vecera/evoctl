@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+<title>evoctl — Your WhatsApp control room. CLI and three MCP tools for Evolution API.</title>
+<rect width="1280" height="640" rx="22" fill="#080f0a"/>
+<g transform="translate(0 64)" font-family="Liberation Sans, Arial, sans-serif">
+<path d="M56 65 L75 82 L56 99 M90 99 H114" fill="none" stroke="#b0f275" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="136" y="105" fill="#f2f7f1" font-family="Liberation Sans, Arial, sans-serif" font-size="60" font-weight="700">evoctl</text>
+<text x="56" y="192" fill="#f2f7f1" font-family="Liberation Sans, Arial, sans-serif" font-size="52" font-weight="700">Your WhatsApp</text>
+<text x="56" y="252" fill="#f2f7f1" font-family="Liberation Sans, Arial, sans-serif" font-size="52" font-weight="700">control room.</text>
+<text x="58" y="300" fill="#99aa9e" font-family="Liberation Sans, Arial, sans-serif" font-size="23" font-weight="400">Evolution API. Local, HTTPS, or SSH.</text>
+<text x="58" y="370" fill="#b0f275" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="19" font-weight="400">CLI + MCP</text>
+<text x="238" y="370" fill="#f2f7f1" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="19" font-weight="400">3 tools</text>
+<text x="398" y="370" fill="#f2f7f1" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="19" font-weight="400">182 routes</text>
+<rect x="638" y="56" width="586" height="332" rx="22" fill="#111a14" stroke="#29372d"/>
+<text x="666" y="92" fill="#99aa9e" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="15" font-weight="400">ONE PROFILE. EVERY WORKFLOW.</text>
+<path d="M638 112 H1224" stroke="#29372d"/>
+<text x="668" y="153" fill="#f2f7f1" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="21" font-weight="400">$ evoctl status</text>
+<text x="668" y="192" fill="#f2f7f1" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="21" font-weight="400">$ evoctl contacts search "Alex"</text>
+<text x="668" y="231" fill="#f2f7f1" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="21" font-weight="400">$ evoctl messages read JID</text>
+<path d="M668 266 H1194" stroke="#29372d"/>
+<text x="668" y="304" fill="#b0f275" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="22" font-weight="400">discover</text>
+<text x="804" y="304" fill="#99aa9e" font-family="Liberation Sans, Arial, sans-serif" font-size="22" font-weight="400">→</text>
+<text x="844" y="304" fill="#b0f275" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="22" font-weight="400">read</text>
+<text x="914" y="304" fill="#99aa9e" font-family="Liberation Sans, Arial, sans-serif" font-size="22" font-weight="400">→</text>
+<text x="954" y="304" fill="#b0f275" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="22" font-weight="400">write</text>
+<text x="668" y="347" fill="#99aa9e" font-family="Liberation Sans, Arial, sans-serif" font-size="20" font-weight="400">Schemas when you need them.</text>
+<path d="M56 424 H1224" stroke="#29372d"/>
+<text x="56" y="462" fill="#99aa9e" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="16" font-weight="400">MESSAGING · PAIRING · REMOTE HEALTH</text>
+<text x="880" y="462" fill="#b0f275" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="16" font-weight="400">OPEN SOURCE / MIT</text>
+<text x="56" y="520" fill="#99aa9e" font-family="JetBrainsMono Nerd Font, DejaVu Sans Mono, monospace" font-size="19" font-weight="400">github.com/1vecera/evoctl</text>
+</g></svg>

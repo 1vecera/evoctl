@@ -70,6 +70,13 @@ def handler_for(state: ProtocolState) -> type[BaseHTTPRequestHandler]:
                     self.reply({"instance": {"state": state.whatsapp}})
             elif self.path == "/instance/fetchInstances":
                 self.reply([{"name": "Default", "token": "private", "hash": "private", "status": "open"}])
+            elif self.path == "/instance/connect/Default":
+                self.reply(
+                    {
+                        "base64": "data:image/png;base64,"
+                        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aX1cAAAAASUVORK5CYII="
+                    }
+                )
             elif self.path == "/redirect":
                 self.reply({}, 302, {"Location": "/must-not-receive-credentials"})
             elif self.path == "/large":

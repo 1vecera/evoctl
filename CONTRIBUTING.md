@@ -10,6 +10,7 @@ uv run pyright
 uv run pytest
 uv build
 uv run scripts/check_dist.py
+uv run scripts/render_brand.py --check
 ```
 
 Tests use real loopback HTTP, CLI and MCP subprocesses, and SQLite. They do not contact WhatsApp. MCP checks cover both current discovery and legacy initialization. The lockfile records the exact tested dependency set; update it deliberately and verify new SDK contracts against official source.
@@ -19,5 +20,7 @@ Dependency updates use the seven-day package-age window declared in `pyproject.t
 For a separately configured live deployment, `uv run scripts/smoke_live.py --profile NAME` checks status, bounded contacts/chats, and the GUI tunnel. Optional `--contact`, `--chat`, and `--message-id` inputs exercise a specific read workflow. Output contains counts/readiness rather than private content. It sends no messages and does not restart services.
 
 The hosted workflow runs the same checks. When paid runner access or account billing alone blocks CI, run equivalent local verification and state that hosted CI was waived for billing. Do not retry paid jobs or change billing settings to unblock them.
+
+Keep the MCP surface at three tools. Add workflows to the shared operation registry and discover them on demand; preserve the explicit read/write boundary. Artwork is generated from [shared design tokens](docs/assets/README.md), and its drift check runs without a native renderer in CI.
 
 See [design](docs/design.md) for the acceptance contract and source research. Catalog route coverage must match the pinned upstream checkout before proposing an API version update.

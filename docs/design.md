@@ -5,11 +5,12 @@ evoctl gives people and agent clients one interface to Evolution API, whether it
 ## Decisions
 
 - One service layer backs the CLI and MCP server. Commands use noun–verb names; results have stable JSON envelopes and error codes.
-- Common tasks have dedicated tools: status, contact lookup, message reading, sending, delivery checks, and pairing. A searchable, versioned API catalog covers the remaining endpoints. Read and mutation tools are separate; the server can expose read, write, or admin capabilities.
+- MCP has three entry points: `evoctl_discover`, `evoctl_read`, and `evoctl_write`. Discovery supplies workflow and REST argument schemas on demand. Execution uses the existing operation validators and capability checks. Read mode advertises only the first two tools; write and admin modes advertise three, with different allowed actions.
 - SSH uses the user's OpenSSH configuration and host-key verification. A small bundled Python worker executes API requests on the remote host, so a container-held API key never crosses SSH. Remote setup, interactive login, key installation, and service startup are explicit operations.
 - A status report distinguishes SSH, runtime, containers, API authentication, WhatsApp pairing, and delivery. Starting services does not recreate missing data volumes or instances.
 - Message sends use a durable idempotency ledger. Reusing a key with the same payload returns the first result. Reusing it with another payload is an error. An uncertain network outcome cannot trigger a second send.
 - MCP uses stdio, structured results, tool annotations, and explicit profile arguments. It does not expose an unauthenticated network listener or arbitrary shell execution.
+- Bundling trades an extra schema-discovery call for a smaller initial tool manifest. Read and write remain separate so the MCP annotations stay meaningful. Execution is not a free-form dispatcher: the selected action and its arguments are checked against the operation registry.
 
 ## Acceptance
 
