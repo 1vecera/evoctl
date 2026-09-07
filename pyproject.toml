@@ -23,6 +23,9 @@ Issues = "https://github.com/1vecera/evoctl/issues"
 [dependency-groups]
 dev = ["pytest>=8", "pytest-asyncio>=1", "ruff>=0.12", "pyright>=1.1", "build>=1", "pyyaml>=6"]
 
+[tool.uv]
+exclude-newer = "7 days"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/evoctl"]
 
