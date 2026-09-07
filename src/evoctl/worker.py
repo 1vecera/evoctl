@@ -192,7 +192,7 @@ def api_request(profile: dict[str, Any], request: dict[str, Any]) -> dict[str, A
             "API_UNREACHABLE",
             "The API request could not be completed.",
             "Inspect status. A mutation may have been accepted; do not resend with a new idempotency key.",
-            request["method"] == "GET",
+            request.get("read_only", False),
         ) from None
     if len(raw) > request["max_bytes"]:
         raise EvoError("RESPONSE_TOO_LARGE", "The API response exceeds the configured byte limit.", "Narrow the query.")
@@ -227,6 +227,7 @@ def health(profile: dict[str, Any]) -> dict[str, Any]:
         "body": None,
         "query": {},
         "authenticated": False,
+        "read_only": True,
         "max_bytes": 65536,
         "sensitive_response": False,
     }

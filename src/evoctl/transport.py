@@ -79,6 +79,8 @@ class Transport:
     ) -> str:
         """Run a fixed remote command and translate SSH failures without exposing stderr."""
         arguments = self.ssh_arguments(fresh=fresh, identity=identity)
+        if fresh and identity:
+            arguments += ["-v", "-o", "IdentityAgent=none", "-o", "PreferredAuthentications=publickey"]
         arguments += ["-T", self.profile.ssh_host, command]
         try:
             result = subprocess.run(
@@ -115,6 +117,17 @@ class Transport:
                 code, message = "SSH_FAILED", f"The remote command failed with exit code {result.returncode}."
                 hint = f"Run evoctl remote login {self.name} to inspect the connection."
             raise EvoError(code, message, hint)
+        if fresh and identity:
+            fingerprint = subprocess.run(
+                ["ssh-keygen", "-lf", identity + ".pub"], capture_output=True, text=True, check=True, timeout=10
+            ).stdout.split()[1]
+            accepted = [line for line in result.stderr.splitlines() if "Server accepts key:" in line]
+            if not accepted or fingerprint not in accepted[-1]:
+                raise EvoError(
+                    "KEY_VERIFICATION_FAILED",
+                    "SSH did not confirm authentication with the dedicated key.",
+                    "Inspect the remote authorized_keys and local SSH identity configuration.",
+                )
         return result.stdout
 
     def call(self, action: str, **arguments: Any) -> Any:
@@ -143,8 +156,9 @@ class Transport:
         """Install this worker version atomically after successful SSH authentication."""
         command = (
             'umask 077; mkdir -p "$HOME/.local/share/evoctl/workers" && '
-            f'cat > "$HOME/{self.remote_path}.tmp" && '
-            f'mv "$HOME/{self.remote_path}.tmp" "$HOME/{self.remote_path}"'
+            'evo_install=$(mktemp "$HOME/.local/share/evoctl/workers/.install.XXXXXX") && '
+            'trap \'rm -f "$evo_install"\' EXIT && cat > "$evo_install" && '
+            f'mv "$evo_install" "$HOME/{self.remote_path}"'
         )
         self.run_ssh(command, self.source.decode())
         return {"profile": self.name, "ssh": "connected", "worker": self.call("ping")}

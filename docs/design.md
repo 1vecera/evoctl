@@ -15,7 +15,7 @@ evoctl gives people and agent clients one interface to Evolution API, whether it
 
 - A clean installation can add a profile, inspect status, bootstrap a remote connection, establish key access, connect an instance, search contacts, read messages, send once, and inspect delivery through short commands.
 - The API catalog is searchable offline, exposes request schemas, and covers all REST routes in the pinned Evolution API source. Route coverage is checked by the catalog build script.
-- CLI and MCP return equivalent results. Invalid input, timeout, missing service, authentication failure, ambiguous contact, and unknown send outcome have distinct actionable errors.
+- CLI and MCP return equivalent results. Invalid input, timeout, missing service, authentication failure, and unknown send outcome have distinct actionable errors. Contact results carry exact JIDs for explicit recipient selection; sending never resolves a display name implicitly.
 - Tests exercise real CLI subprocesses, a local HTTP protocol fixture, SQLite idempotency, and an actual MCP client/server session. Read-only smoke checks cover a real SSH host and Evolution deployment.
 - The public repository contains installation, remote setup, security, API, troubleshooting, and contributor documentation, a license, a reproducible lockfile, and a pull request ready for human review.
 

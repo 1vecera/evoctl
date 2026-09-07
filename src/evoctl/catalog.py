@@ -95,6 +95,7 @@ class Catalog:
             "body": body,
             "query": query,
             "authenticated": operation_id not in {"server.info", "server.metrics"},
+            "read_only": operation["access"] == "read",
             "max_bytes": max_bytes,
             "sensitive_response": operation["sensitive_response"],
         }

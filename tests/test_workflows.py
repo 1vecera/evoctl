@@ -80,6 +80,7 @@ def test_uncertain_send_cannot_be_retried_automatically(protocol):
     first = service.invoke("message_send", arguments)
     second = service.invoke("message_send", arguments)
     assert not first.ok and not second.ok
+    assert not first.error["retryable"]
     assert second.error["code"] == "SEND_OUTCOME_UNKNOWN"
     assert len([request for request in state.requests if request[1].startswith("/message/")]) == 1
 
