@@ -1,0 +1,11 @@
+evoctl uses Evolution API as a separately installed external service.
+Evolution API: https://github.com/evolution-foundation/evolution-api
+Copyright belongs to the Evolution API contributors.
+
+The bundled catalog records public REST interface facts from Evolution API 2.3.7
+and request-schema information from its official documentation. It does not
+bundle the Evolution server, its frontend, or its WhatsApp integration code.
+Evolution API has its own license and conditions; consult the upstream LICENSE.
+
+evoctl is independently developed, is not an official Evolution API product,
+and does not imply endorsement by Evolution API, WhatsApp, or Meta.

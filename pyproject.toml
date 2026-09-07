@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "evoctl"
+version = "0.1.0"
+description = "Structured CLI and MCP tools for Evolution API messaging and remote operations"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{name = "Daniel Vecera"}]
+keywords = ["mcp", "whatsapp", "evolution-api", "cli", "ssh"]
+dependencies = ["mcp>=2.1.1,<3", "typer>=0.27.2,<1", "pydantic>=2.13.5,<3", "jsonschema>=4.25,<5"]
+
+[project.scripts]
+evoctl = "evoctl.cli:main"
+
+[project.urls]
+Repository = "https://github.com/1vecera/evoctl"
+Issues = "https://github.com/1vecera/evoctl/issues"
+
+[dependency-groups]
+dev = ["pytest>=8", "pytest-asyncio>=1", "ruff>=0.12", "pyright>=1.1", "build>=1", "pyyaml>=6"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/evoctl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pyright]
+include = ["src"]
+typeCheckingMode = "standard"
+pythonVersion = "3.12"

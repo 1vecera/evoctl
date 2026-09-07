@@ -1,0 +1,4035 @@
+{
+  "api": "Evolution API",
+  "version": "2.3.7",
+  "source": "https://github.com/evolution-foundation/evolution-api/tree/2.3.7",
+  "route_source_sha256": "fbd1175b8106345f784cee9fec50134878a48331668580ad4ff01c80a19584e8",
+  "operations": [
+    {
+      "id": "baileys.assert_sessions",
+      "method": "POST",
+      "path": "/baileys/assertSessions/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/channel/whatsapp/baileys.router.ts",
+      "source_line": 32,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "baileys.create_participant_nodes",
+      "method": "POST",
+      "path": "/baileys/createParticipantNodes/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/channel/whatsapp/baileys.router.ts",
+      "source_line": 42,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "baileys.generate_message_tag",
+      "method": "POST",
+      "path": "/baileys/generateMessageTag/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/channel/whatsapp/baileys.router.ts",
+      "source_line": 62,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "baileys.get_auth_state",
+      "method": "POST",
+      "path": "/baileys/getAuthState/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/channel/whatsapp/baileys.router.ts",
+      "source_line": 92,
+      "multipart": false,
+      "sensitive_response": true
+    },
+    {
+      "id": "baileys.get_usync_devices",
+      "method": "POST",
+      "path": "/baileys/getUSyncDevices/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/channel/whatsapp/baileys.router.ts",
+      "source_line": 52,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "baileys.on_whatsapp",
+      "method": "POST",
+      "path": "/baileys/onWhatsapp/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/channel/whatsapp/baileys.router.ts",
+      "source_line": 12,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "baileys.profile_picture_url",
+      "method": "POST",
+      "path": "/baileys/profilePictureUrl/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/channel/whatsapp/baileys.router.ts",
+      "source_line": 22,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "baileys.send_node",
+      "method": "POST",
+      "path": "/baileys/sendNode/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/channel/whatsapp/baileys.router.ts",
+      "source_line": 72,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "baileys.signal_repository_decrypt_message",
+      "method": "POST",
+      "path": "/baileys/signalRepositoryDecryptMessage/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/channel/whatsapp/baileys.router.ts",
+      "source_line": 82,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "business.get_catalog",
+      "method": "POST",
+      "path": "/business/getCatalog/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/business.router.ts",
+      "source_line": 14,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "business.get_collections",
+      "method": "POST",
+      "path": "/business/getCollections/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/business.router.ts",
+      "source_line": 34,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "call.offer",
+      "method": "POST",
+      "path": "/call/offer/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number",
+          "offer"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "offer": {
+            "type": "object"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/call.router.ts",
+      "source_line": 12,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.archive_chat",
+      "method": "POST",
+      "path": "/chat/archiveChat/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number",
+          "archive"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "archive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 73,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.delete_message_for_everyone",
+      "method": "DELETE",
+      "path": "/chat/deleteMessageForEveryone/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 93,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.fetch_business_profile",
+      "method": "POST",
+      "path": "/chat/fetchBusinessProfile/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 205,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.fetch_privacy_settings",
+      "method": "GET",
+      "path": "/chat/fetchPrivacySettings/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 265,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.fetch_profile",
+      "method": "POST",
+      "path": "/chat/fetchProfile/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 215,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.fetch_profile_picture_url",
+      "method": "POST",
+      "path": "/chat/fetchProfilePictureUrl/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 103,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.find_chat_by_remote_jid",
+      "method": "GET",
+      "path": "/chat/findChatByRemoteJid/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 194,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.find_chats",
+      "method": "POST",
+      "path": "/chat/findChats/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "properties": {
+          "where": {
+            "type": "object"
+          },
+          "take": {
+            "type": "integer"
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "orderBy": {
+            "type": "object"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 184,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.find_contacts",
+      "method": "POST",
+      "path": "/chat/findContacts/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "properties": {
+          "where": {
+            "type": "object"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "schema_source": "runtime_verified",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 154,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.find_messages",
+      "method": "POST",
+      "path": "/chat/findMessages/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "properties": {
+          "where": {
+            "type": "object"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "schema_source": "runtime_verified",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 164,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.find_status_message",
+      "method": "POST",
+      "path": "/chat/findStatusMessage/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "properties": {
+          "where": {
+            "type": "object"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "schema_source": "runtime_verified",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 174,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.get_base64_from_media_message",
+      "method": "POST",
+      "path": "/chat/getBase64FromMediaMessage/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 113,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.mark_chat_unread",
+      "method": "POST",
+      "path": "/chat/markChatUnread/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 83,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.mark_message_as_read",
+      "method": "POST",
+      "path": "/chat/markMessageAsRead/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "readMessages"
+        ],
+        "properties": {
+          "readMessages": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 63,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.remove_profile_picture",
+      "method": "DELETE",
+      "path": "/chat/removeProfilePicture/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 255,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.send_presence",
+      "method": "POST",
+      "path": "/chat/sendPresence/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 134,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.update_block_status",
+      "method": "POST",
+      "path": "/chat/updateBlockStatus/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 144,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.update_message",
+      "method": "POST",
+      "path": "/chat/updateMessage/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 124,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.update_privacy_settings",
+      "method": "POST",
+      "path": "/chat/updatePrivacySettings/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 275,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.update_profile_name",
+      "method": "POST",
+      "path": "/chat/updateProfileName/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 225,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.update_profile_picture",
+      "method": "POST",
+      "path": "/chat/updateProfilePicture/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 245,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.update_profile_status",
+      "method": "POST",
+      "path": "/chat/updateProfileStatus/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 235,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chat.whatsapp_numbers",
+      "method": "POST",
+      "path": "/chat/whatsappNumbers/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "numbers"
+        ],
+        "properties": {
+          "numbers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/chat.router.ts",
+      "source_line": 48,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chatwoot.find",
+      "method": "GET",
+      "path": "/chatwoot/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/chatwoot/routes/chatwoot.router.ts",
+      "source_line": 23,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chatwoot.set",
+      "method": "POST",
+      "path": "/chatwoot/set/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/chatwoot/routes/chatwoot.router.ts",
+      "source_line": 13,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "chatwoot.webhook",
+      "method": "POST",
+      "path": "/chatwoot/webhook/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/chatwoot/routes/chatwoot.router.ts",
+      "source_line": 33,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "dify.change_status",
+      "method": "POST",
+      "path": "/dify/changeStatus/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/dify/routes/dify.router.ts",
+      "source_line": 90,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "dify.create",
+      "method": "POST",
+      "path": "/dify/create/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/dify/routes/dify.router.ts",
+      "source_line": 20,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "dify.delete",
+      "method": "DELETE",
+      "path": "/dify/delete/{difyId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "difyId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/dify/routes/dify.router.ts",
+      "source_line": 60,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "dify.fetch",
+      "method": "GET",
+      "path": "/dify/fetch/{difyId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "difyId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/dify/routes/dify.router.ts",
+      "source_line": 40,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "dify.fetch_sessions",
+      "method": "GET",
+      "path": "/dify/fetchSessions/{difyId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "difyId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/dify/routes/dify.router.ts",
+      "source_line": 100,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "dify.fetch_settings",
+      "method": "GET",
+      "path": "/dify/fetchSettings/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/dify/routes/dify.router.ts",
+      "source_line": 80,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "dify.find",
+      "method": "GET",
+      "path": "/dify/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/dify/routes/dify.router.ts",
+      "source_line": 30,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "dify.ignore_jid",
+      "method": "POST",
+      "path": "/dify/ignoreJid/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/dify/routes/dify.router.ts",
+      "source_line": 110,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "dify.settings",
+      "method": "POST",
+      "path": "/dify/settings/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/dify/routes/dify.router.ts",
+      "source_line": 70,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "dify.update",
+      "method": "PUT",
+      "path": "/dify/update/{difyId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "difyId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/dify/routes/dify.router.ts",
+      "source_line": 50,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evoai.change_status",
+      "method": "POST",
+      "path": "/evoai/changeStatus/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evoai/routes/evoai.router.ts",
+      "source_line": 91,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evoai.create",
+      "method": "POST",
+      "path": "/evoai/create/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evoai/routes/evoai.router.ts",
+      "source_line": 21,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evoai.delete",
+      "method": "DELETE",
+      "path": "/evoai/delete/{evoaiId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "evoaiId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evoai/routes/evoai.router.ts",
+      "source_line": 61,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evoai.fetch",
+      "method": "GET",
+      "path": "/evoai/fetch/{evoaiId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "evoaiId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evoai/routes/evoai.router.ts",
+      "source_line": 41,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evoai.fetch_sessions",
+      "method": "GET",
+      "path": "/evoai/fetchSessions/{evoaiId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "evoaiId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evoai/routes/evoai.router.ts",
+      "source_line": 101,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evoai.fetch_settings",
+      "method": "GET",
+      "path": "/evoai/fetchSettings/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evoai/routes/evoai.router.ts",
+      "source_line": 81,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evoai.find",
+      "method": "GET",
+      "path": "/evoai/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evoai/routes/evoai.router.ts",
+      "source_line": 31,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evoai.ignore_jid",
+      "method": "POST",
+      "path": "/evoai/ignoreJid/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evoai/routes/evoai.router.ts",
+      "source_line": 111,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evoai.settings",
+      "method": "POST",
+      "path": "/evoai/settings/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evoai/routes/evoai.router.ts",
+      "source_line": 71,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evoai.update",
+      "method": "PUT",
+      "path": "/evoai/update/{evoaiId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "evoaiId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evoai/routes/evoai.router.ts",
+      "source_line": 51,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evolution_bot.change_status",
+      "method": "POST",
+      "path": "/evolutionBot/changeStatus/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evolutionBot/routes/evolutionBot.router.ts",
+      "source_line": 91,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evolution_bot.create",
+      "method": "POST",
+      "path": "/evolutionBot/create/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evolutionBot/routes/evolutionBot.router.ts",
+      "source_line": 21,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evolution_bot.delete",
+      "method": "DELETE",
+      "path": "/evolutionBot/delete/{evolutionBotId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "evolutionBotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evolutionBot/routes/evolutionBot.router.ts",
+      "source_line": 61,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evolution_bot.fetch",
+      "method": "GET",
+      "path": "/evolutionBot/fetch/{evolutionBotId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "evolutionBotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evolutionBot/routes/evolutionBot.router.ts",
+      "source_line": 41,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evolution_bot.fetch_sessions",
+      "method": "GET",
+      "path": "/evolutionBot/fetchSessions/{evolutionBotId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "evolutionBotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evolutionBot/routes/evolutionBot.router.ts",
+      "source_line": 101,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evolution_bot.fetch_settings",
+      "method": "GET",
+      "path": "/evolutionBot/fetchSettings/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evolutionBot/routes/evolutionBot.router.ts",
+      "source_line": 81,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evolution_bot.find",
+      "method": "GET",
+      "path": "/evolutionBot/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evolutionBot/routes/evolutionBot.router.ts",
+      "source_line": 31,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evolution_bot.ignore_jid",
+      "method": "POST",
+      "path": "/evolutionBot/ignoreJid/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evolutionBot/routes/evolutionBot.router.ts",
+      "source_line": 111,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evolution_bot.settings",
+      "method": "POST",
+      "path": "/evolutionBot/settings/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evolutionBot/routes/evolutionBot.router.ts",
+      "source_line": 71,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "evolution_bot.update",
+      "method": "PUT",
+      "path": "/evolutionBot/update/{evolutionBotId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "evolutionBotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/evolutionBot/routes/evolutionBot.router.ts",
+      "source_line": 51,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "flowise.change_status",
+      "method": "POST",
+      "path": "/flowise/changeStatus/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/flowise/routes/flowise.router.ts",
+      "source_line": 91,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "flowise.create",
+      "method": "POST",
+      "path": "/flowise/create/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/flowise/routes/flowise.router.ts",
+      "source_line": 21,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "flowise.delete",
+      "method": "DELETE",
+      "path": "/flowise/delete/{flowiseId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "flowiseId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/flowise/routes/flowise.router.ts",
+      "source_line": 61,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "flowise.fetch",
+      "method": "GET",
+      "path": "/flowise/fetch/{flowiseId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "flowiseId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/flowise/routes/flowise.router.ts",
+      "source_line": 41,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "flowise.fetch_sessions",
+      "method": "GET",
+      "path": "/flowise/fetchSessions/{flowiseId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "flowiseId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/flowise/routes/flowise.router.ts",
+      "source_line": 101,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "flowise.fetch_settings",
+      "method": "GET",
+      "path": "/flowise/fetchSettings/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/flowise/routes/flowise.router.ts",
+      "source_line": 81,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "flowise.find",
+      "method": "GET",
+      "path": "/flowise/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/flowise/routes/flowise.router.ts",
+      "source_line": 31,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "flowise.ignore_jid",
+      "method": "POST",
+      "path": "/flowise/ignoreJid/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/flowise/routes/flowise.router.ts",
+      "source_line": 111,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "flowise.settings",
+      "method": "POST",
+      "path": "/flowise/settings/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/flowise/routes/flowise.router.ts",
+      "source_line": 71,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "flowise.update",
+      "method": "PUT",
+      "path": "/flowise/update/{flowiseId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "flowiseId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/flowise/routes/flowise.router.ts",
+      "source_line": 51,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.accept_invite_code",
+      "method": "GET",
+      "path": "/group/acceptInviteCode/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 129,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.create",
+      "method": "POST",
+      "path": "/group/create/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "subject",
+          "participants"
+        ],
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 39,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.fetch_all_groups",
+      "method": "GET",
+      "path": "/group/fetchAllGroups/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 89,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.find_group_infos",
+      "method": "GET",
+      "path": "/group/findGroupInfos/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [
+        {
+          "name": "groupJid",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 79,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.invite_code",
+      "method": "GET",
+      "path": "/group/inviteCode/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 109,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.invite_info",
+      "method": "GET",
+      "path": "/group/inviteInfo/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 119,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.leave_group",
+      "method": "DELETE",
+      "path": "/group/leaveGroup/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 189,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.participants",
+      "method": "GET",
+      "path": "/group/participants/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [
+        {
+          "name": "groupJid",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 99,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.revoke_invite_code",
+      "method": "POST",
+      "path": "/group/revokeInviteCode/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 149,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.send_invite",
+      "method": "POST",
+      "path": "/group/sendInvite/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 139,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.toggle_ephemeral",
+      "method": "POST",
+      "path": "/group/toggleEphemeral/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 179,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.update_group_description",
+      "method": "POST",
+      "path": "/group/updateGroupDescription/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 69,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.update_group_picture",
+      "method": "POST",
+      "path": "/group/updateGroupPicture/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 59,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.update_group_subject",
+      "method": "POST",
+      "path": "/group/updateGroupSubject/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 49,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.update_participant",
+      "method": "POST",
+      "path": "/group/updateParticipant/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "groupJid",
+          "action",
+          "participants"
+        ],
+        "properties": {
+          "groupJid": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "add",
+              "remove",
+              "promote",
+              "demote"
+            ]
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 159,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "group.update_setting",
+      "method": "POST",
+      "path": "/group/updateSetting/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/group.router.ts",
+      "source_line": 169,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "instance.connect",
+      "method": "GET",
+      "path": "/instance/connect/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/instance.router.ts",
+      "source_line": 37,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "instance.connection_state",
+      "method": "GET",
+      "path": "/instance/connectionState/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/instance.router.ts",
+      "source_line": 47,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "instance.create",
+      "method": "POST",
+      "path": "/instance/create",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "instanceName"
+        ],
+        "properties": {
+          "instanceName": {
+            "type": "string"
+          },
+          "qrcode": {
+            "type": "boolean",
+            "default": true
+          },
+          "integration": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "webhook": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "url": {
+                "type": "string"
+              },
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [],
+      "source": "src/api/routes/instance.router.ts",
+      "source_line": 17,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "instance.delete",
+      "method": "DELETE",
+      "path": "/instance/delete/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/instance.router.ts",
+      "source_line": 89,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "instance.fetch_instances",
+      "method": "GET",
+      "path": "/instance/fetchInstances",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [],
+      "source": "src/api/routes/instance.router.ts",
+      "source_line": 57,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "instance.logout",
+      "method": "DELETE",
+      "path": "/instance/logout/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/instance.router.ts",
+      "source_line": 79,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "instance.restart",
+      "method": "POST",
+      "path": "/instance/restart/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/instance.router.ts",
+      "source_line": 27,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "instance.set_presence",
+      "method": "POST",
+      "path": "/instance/setPresence/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "presence"
+        ],
+        "properties": {
+          "presence": {
+            "type": "string",
+            "enum": [
+              "available",
+              "unavailable",
+              "composing",
+              "recording"
+            ]
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/instance.router.ts",
+      "source_line": 69,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "kafka.find",
+      "method": "GET",
+      "path": "/kafka/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/kafka/kafka.router.ts",
+      "source_line": 23,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "kafka.set",
+      "method": "POST",
+      "path": "/kafka/set/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/kafka/kafka.router.ts",
+      "source_line": 13,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "label.find_labels",
+      "method": "GET",
+      "path": "/label/findLabels/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/label.router.ts",
+      "source_line": 13,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "label.handle_label",
+      "method": "POST",
+      "path": "/label/handleLabel/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "name",
+          "type",
+          "id"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "chat",
+              "message"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "add",
+              "remove"
+            ]
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/label.router.ts",
+      "source_line": 23,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_buttons",
+      "method": "POST",
+      "path": "/message/sendButtons/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number",
+          "buttons",
+          "text",
+          "footerText"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "buttons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "buttonId": {
+                  "type": "string"
+                },
+                "buttonText": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "text": {
+            "type": "string"
+          },
+          "footerText": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 175,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_contact",
+      "method": "POST",
+      "path": "/message/sendContact/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number",
+          "contacts"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": "string"
+                },
+                "contacts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 135,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_list",
+      "method": "POST",
+      "path": "/message/sendList/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number",
+          "title",
+          "description",
+          "buttonText",
+          "sections"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "buttonText": {
+            "type": "string"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 165,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_location",
+      "method": "POST",
+      "path": "/message/sendLocation/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number",
+          "latitude",
+          "longitude"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 125,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_media",
+      "method": "POST",
+      "path": "/message/sendMedia/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 64,
+      "multipart": true,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_poll",
+      "method": "POST",
+      "path": "/message/sendPoll/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number",
+          "name",
+          "selectableCount",
+          "values"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "selectableCount": {
+            "type": "integer"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 155,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_ptv",
+      "method": "POST",
+      "path": "/message/sendPtv/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 76,
+      "multipart": true,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_reaction",
+      "method": "POST",
+      "path": "/message/sendReaction/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "reactionKey",
+          "reactionMessage"
+        ],
+        "properties": {
+          "reactionKey": {
+            "type": "object"
+          },
+          "reactionMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 145,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_status",
+      "method": "POST",
+      "path": "/message/sendStatus/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 101,
+      "multipart": true,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_sticker",
+      "method": "POST",
+      "path": "/message/sendSticker/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 113,
+      "multipart": true,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_template",
+      "method": "POST",
+      "path": "/message/sendTemplate/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number",
+          "textMessage"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "textMessage": {
+            "type": "object",
+            "required": [
+              "text"
+            ],
+            "properties": {
+              "text": {
+                "type": "string"
+              }
+            }
+          },
+          "delay": {
+            "type": "integer"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 44,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_text",
+      "method": "POST",
+      "path": "/message/sendText/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "number",
+          "text"
+        ],
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "schema_source": "runtime_verified",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 54,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "message.send_whats_app_audio",
+      "method": "POST",
+      "path": "/message/sendWhatsAppAudio/{instanceName}",
+      "access": "write",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/sendMessage.router.ts",
+      "source_line": 88,
+      "multipart": true,
+      "sensitive_response": false
+    },
+    {
+      "id": "n8n.change_status",
+      "method": "POST",
+      "path": "/n8n/changeStatus/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/n8n/routes/n8n.router.ts",
+      "source_line": 84,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "n8n.create",
+      "method": "POST",
+      "path": "/n8n/create/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/n8n/routes/n8n.router.ts",
+      "source_line": 21,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "n8n.delete",
+      "method": "DELETE",
+      "path": "/n8n/delete/{n8nId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "n8nId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/n8n/routes/n8n.router.ts",
+      "source_line": 57,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "n8n.fetch",
+      "method": "GET",
+      "path": "/n8n/fetch/{n8nId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "n8nId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/n8n/routes/n8n.router.ts",
+      "source_line": 39,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "n8n.fetch_sessions",
+      "method": "GET",
+      "path": "/n8n/fetchSessions/{n8nId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "n8nId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/n8n/routes/n8n.router.ts",
+      "source_line": 93,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "n8n.fetch_settings",
+      "method": "GET",
+      "path": "/n8n/fetchSettings/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/n8n/routes/n8n.router.ts",
+      "source_line": 75,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "n8n.find",
+      "method": "GET",
+      "path": "/n8n/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/n8n/routes/n8n.router.ts",
+      "source_line": 30,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "n8n.ignore_jid",
+      "method": "POST",
+      "path": "/n8n/ignoreJid/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/n8n/routes/n8n.router.ts",
+      "source_line": 102,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "n8n.settings",
+      "method": "POST",
+      "path": "/n8n/settings/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/n8n/routes/n8n.router.ts",
+      "source_line": 66,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "n8n.update",
+      "method": "PUT",
+      "path": "/n8n/update/{n8nId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "n8nId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/n8n/routes/n8n.router.ts",
+      "source_line": 48,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "nats.find",
+      "method": "GET",
+      "path": "/nats/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/nats/nats.router.ts",
+      "source_line": 23,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "nats.set",
+      "method": "POST",
+      "path": "/nats/set/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/nats/nats.router.ts",
+      "source_line": 13,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.change_status",
+      "method": "POST",
+      "path": "/openai/changeStatus/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 121,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.create",
+      "method": "POST",
+      "path": "/openai/create/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 51,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.creds.delete",
+      "method": "DELETE",
+      "path": "/openai/creds/{openaiCredsId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "openaiCredsId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 41,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.creds.get",
+      "method": "GET",
+      "path": "/openai/creds/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 31,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.creds.post",
+      "method": "POST",
+      "path": "/openai/creds/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 21,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.delete",
+      "method": "DELETE",
+      "path": "/openai/delete/{openaiBotId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "openaiBotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 91,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.fetch",
+      "method": "GET",
+      "path": "/openai/fetch/{openaiBotId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "openaiBotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 71,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.fetch_sessions",
+      "method": "GET",
+      "path": "/openai/fetchSessions/{openaiBotId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "openaiBotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 131,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.fetch_settings",
+      "method": "GET",
+      "path": "/openai/fetchSettings/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 111,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.find",
+      "method": "GET",
+      "path": "/openai/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 61,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.get_models",
+      "method": "GET",
+      "path": "/openai/getModels/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 151,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.ignore_jid",
+      "method": "POST",
+      "path": "/openai/ignoreJid/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 141,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.settings",
+      "method": "POST",
+      "path": "/openai/settings/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 101,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "openai.update",
+      "method": "PUT",
+      "path": "/openai/update/{openaiBotId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "openaiBotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/openai/routes/openai.router.ts",
+      "source_line": 81,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "proxy.find",
+      "method": "GET",
+      "path": "/proxy/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/proxy.router.ts",
+      "source_line": 24,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "proxy.set",
+      "method": "POST",
+      "path": "/proxy/set/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "proxyHost": {
+            "type": "string"
+          },
+          "proxyPort": {
+            "type": "string"
+          },
+          "proxyProtocol": {
+            "type": "string",
+            "enum": [
+              "http",
+              "https",
+              "socks4",
+              "socks5"
+            ]
+          },
+          "proxyUsername": {
+            "type": "string"
+          },
+          "proxyPassword": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/proxy.router.ts",
+      "source_line": 14,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "pusher.find",
+      "method": "GET",
+      "path": "/pusher/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/pusher/pusher.router.ts",
+      "source_line": 21,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "pusher.set",
+      "method": "POST",
+      "path": "/pusher/set/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/pusher/pusher.router.ts",
+      "source_line": 12,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "rabbitmq.find",
+      "method": "GET",
+      "path": "/rabbitmq/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/rabbitmq/rabbitmq.router.ts",
+      "source_line": 23,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "rabbitmq.set",
+      "method": "POST",
+      "path": "/rabbitmq/set/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/rabbitmq/rabbitmq.router.ts",
+      "source_line": 13,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "s3.get_media",
+      "method": "POST",
+      "path": "/s3/getMedia/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/storage/s3/routes/s3.router.ts",
+      "source_line": 12,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "s3.get_media_url",
+      "method": "POST",
+      "path": "/s3/getMediaUrl/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/storage/s3/routes/s3.router.ts",
+      "source_line": 22,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "server.info",
+      "method": "GET",
+      "path": "/",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [],
+      "source": "src/api/routes/index.router.ts",
+      "source_line": 196,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "server.metrics",
+      "method": "GET",
+      "path": "/metrics",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [],
+      "source": "src/api/routes/index.router.ts",
+      "source_line": 106,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "server.verify_creds",
+      "method": "POST",
+      "path": "/verify-creds",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [],
+      "source": "src/api/routes/index.router.ts",
+      "source_line": 207,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "server.webhook.evolution",
+      "method": "POST",
+      "path": "/webhook/evolution",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [],
+      "source": "src/api/integrations/channel/evolution/evolution.router.ts",
+      "source_line": 9,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "server.webhook.meta.get",
+      "method": "GET",
+      "path": "/webhook/meta",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [],
+      "source": "src/api/integrations/channel/meta/meta.router.ts",
+      "source_line": 10,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "server.webhook.meta.post",
+      "method": "POST",
+      "path": "/webhook/meta",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [],
+      "source": "src/api/integrations/channel/meta/meta.router.ts",
+      "source_line": 15,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "settings.find",
+      "method": "GET",
+      "path": "/settings/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/settings.router.ts",
+      "source_line": 24,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "settings.set",
+      "method": "POST",
+      "path": "/settings/set/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "properties": {
+          "rejectCall": {
+            "type": "boolean"
+          },
+          "msgCall": {
+            "type": "string"
+          },
+          "groupsIgnore": {
+            "type": "boolean"
+          },
+          "alwaysOnline": {
+            "type": "boolean"
+          },
+          "readMessages": {
+            "type": "boolean"
+          },
+          "readStatus": {
+            "type": "boolean"
+          },
+          "syncFullHistory": {
+            "type": "boolean"
+          },
+          "wavoipToken": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/settings.router.ts",
+      "source_line": 14,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "sqs.find",
+      "method": "GET",
+      "path": "/sqs/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/sqs/sqs.router.ts",
+      "source_line": 23,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "sqs.set",
+      "method": "POST",
+      "path": "/sqs/set/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/sqs/sqs.router.ts",
+      "source_line": 13,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "template.create",
+      "method": "POST",
+      "path": "/template/create/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "name",
+          "category",
+          "language",
+          "components"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "MARKETING",
+              "UTILITY",
+              "AUTHENTICATION"
+            ]
+          },
+          "language": {
+            "type": "string"
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/template.router.ts",
+      "source_line": 21,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "template.delete",
+      "method": "DELETE",
+      "path": "/template/delete/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/template.router.ts",
+      "source_line": 56,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "template.edit",
+      "method": "POST",
+      "path": "/template/edit/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "components": {
+            "type": "array"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/template.router.ts",
+      "source_line": 40,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "template.find",
+      "method": "GET",
+      "path": "/template/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/routes/template.router.ts",
+      "source_line": 72,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.change_status",
+      "method": "POST",
+      "path": "/typebot/changeStatus/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 101,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.create",
+      "method": "POST",
+      "path": "/typebot/create/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 21,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.delete",
+      "method": "DELETE",
+      "path": "/typebot/delete/{typebotId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "typebotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 61,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.fetch",
+      "method": "GET",
+      "path": "/typebot/fetch/{typebotId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "typebotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 41,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.fetch_sessions",
+      "method": "GET",
+      "path": "/typebot/fetchSessions/{typebotId}/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "typebotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 111,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.fetch_settings",
+      "method": "GET",
+      "path": "/typebot/fetchSettings/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 81,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.find",
+      "method": "GET",
+      "path": "/typebot/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 31,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.ignore_jid",
+      "method": "POST",
+      "path": "/typebot/ignoreJid/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 121,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.settings",
+      "method": "POST",
+      "path": "/typebot/settings/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 71,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.start",
+      "method": "POST",
+      "path": "/typebot/start/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 91,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "typebot.update",
+      "method": "PUT",
+      "path": "/typebot/update/{typebotId}/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "typebotId",
+        "instanceName"
+      ],
+      "source": "src/api/integrations/chatbot/typebot/routes/typebot.router.ts",
+      "source_line": 51,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "webhook.find",
+      "method": "GET",
+      "path": "/webhook/find/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/webhook/webhook.router.ts",
+      "source_line": 27,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "webhook.set",
+      "method": "POST",
+      "path": "/webhook/set/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "headers": {
+            "type": "object"
+          },
+          "base64": {
+            "type": "boolean"
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/webhook/webhook.router.ts",
+      "source_line": 17,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "websocket.find",
+      "method": "GET",
+      "path": "/websocket/find/{instanceName}",
+      "access": "read",
+      "body_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "schema_source": "undocumented",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/websocket/websocket.router.ts",
+      "source_line": 23,
+      "multipart": false,
+      "sensitive_response": false
+    },
+    {
+      "id": "websocket.set",
+      "method": "POST",
+      "path": "/websocket/set/{instanceName}",
+      "access": "admin",
+      "body_schema": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "schema_source": "upstream_openapi",
+      "query_parameters": [],
+      "path_parameters": [
+        "instanceName"
+      ],
+      "source": "src/api/integrations/event/websocket/websocket.router.ts",
+      "source_line": 13,
+      "multipart": false,
+      "sensitive_response": false
+    }
+  ],
+  "excluded": [
+    {
+      "path": "/assets/*",
+      "reason": "Static frontend assets"
+    },
+    {
+      "path": "/manager/*",
+      "reason": "HTML frontend"
+    }
+  ]
+}
