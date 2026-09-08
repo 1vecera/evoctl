@@ -31,6 +31,21 @@ class ProtocolState:
         ]
     )
     messages: list[dict[str, Any]] = field(default_factory=list)
+    chats: list[dict[str, Any]] = field(
+        default_factory=lambda: [
+            {"remoteJid": "15550000001@s.whatsapp.net", "pushName": "Alex", "unreadMessages": 2},
+            {"remoteJid": "120363000000000001@g.us", "pushName": "Outdated label"},
+        ]
+    )
+    groups: list[dict[str, Any]] = field(
+        default_factory=lambda: [
+            {"id": "120363000000000000@g.us", "subject": "Example group"},
+            {"id": "120363000000000001@g.us", "subject": "Žluťoučký tým"},
+            {"id": "120363000000000002@g.us", "subject": "Alex Novák study group"},
+        ]
+    )
+    source_failures: dict[str, int] = field(default_factory=dict)
+    group_delay: float = 0
     updates: list[dict[str, Any]] = field(default_factory=list)
     send_delay: float = 0
     send_status: int = 201
@@ -61,7 +76,13 @@ def handler_for(state: ProtocolState) -> type[BaseHTTPRequestHandler]:
         def do_GET(self) -> None:
             """Serve root health, instance state, and a redirect leak regression route."""
             state.requests.append(("GET", self.path, None))
-            if self.path == "/":
+            if self.path in state.source_failures:
+                self.reply({}, state.source_failures[self.path])
+            elif self.path == "/group/fetchAllGroups/Default?getParticipants=false":
+                if state.group_delay:
+                    time.sleep(state.group_delay)
+                self.reply(state.groups)
+            elif self.path == "/":
                 self.reply({"version": "2.3.7"})
             elif self.path == "/instance/connectionState/Default":
                 if self.headers["apikey"] != "test-only":
@@ -96,11 +117,14 @@ def handler_for(state: ProtocolState) -> type[BaseHTTPRequestHandler]:
             if self.headers["apikey"] != "test-only":
                 self.reply({}, 401)
                 return
+            if self.path in state.source_failures:
+                self.reply({}, state.source_failures[self.path])
+                return
             if self.path == "/chat/findContacts/Default":
                 offset, page = body["offset"], body["page"]
                 self.reply(state.contacts[(page - 1) * offset : page * offset])
             elif self.path == "/chat/findChats/Default":
-                self.reply([{"remoteJid": "15550000001@s.whatsapp.net", "pushName": "Alex", "unreadMessages": 2}])
+                self.reply(state.chats[body["skip"] : body["skip"] + body["take"]])
             elif self.path == "/chat/findMessages/Default":
                 records = state.messages
                 filters = body["where"]["key"]

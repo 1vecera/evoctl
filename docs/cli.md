@@ -7,8 +7,10 @@ Select a deployment once with `evoctl remote use NAME`, or put `--profile NAME` 
 | Inspect readiness | `evoctl status` or `evoctl doctor` |
 | Monitor continuously | `evoctl status --watch --interval 5` |
 | List profiles | `evoctl remote list` |
-| Find contacts | `evoctl contacts search "Alex" --limit 10` |
-| Continue a contact search | `evoctl contacts search "Alex" --cursor '1:10'` |
+| Find people and groups | `evoctl chats search "Alex" --limit 10` |
+| Continue the same search | `evoctl chats search "Alex" --limit 10 --cursor "$NEXT_CURSOR"` |
+| Search only groups | `evoctl chats search "Study" --kind group` |
+| Legacy contacts-only lookup | `evoctl contacts search "Alex" --limit 10` |
 | List conversations | `evoctl chats list --limit 20` |
 | Read one conversation | `evoctl messages read 15550000001 --limit 20` |
 | Preview exact text | `evoctl messages send 15550000001 --text 'Hello' --dry-run` |
@@ -24,8 +26,16 @@ Select a deployment once with `evoctl remote use NAME`, or put `--profile NAME` 
 | Inspect its arguments | `evoctl api schema group.fetch_all_groups` |
 | Print MCP client configuration | `evoctl mcp config --mode write` |
 
-Numbers and cursors above are examples; use exact returned identifiers and continuation values. Contact scans are bounded and report whether they are complete. History supports `--page` and an ISO timestamp with timezone through `--since`.
+Numbers and cursors above are examples; use exact returned identifiers and continuation values. Recipient scans are bounded and report whether they are complete; see [search behavior and limits](recipient-search.md). History supports `--page` and an ISO timestamp with timezone through `--since`.
 
 Each command prints a JSON envelope: `{"ok":true,"data":...,"error":null}`. Errors have codes, recovery hints, and nonzero exit statuses. Monitoring emits one envelope per line; `--count` bounds a watch. Global `--output-file result.json` writes a private result file. `--text-file -` reads message text from stdin, while generic `--body` accepts inline JSON, `@filename`, or `-`.
 
 For instance creation, media, groups, integrations, and the rest of the REST surface, use [the API catalog](api.md). For remote authentication and service setup, see [remotes](remotes.md).
+
+## Search recipients
+
+`chats search` searches personal contact/display names, group names/subjects and JID/phone substrings together, ignoring case and diacritics. It returns `data.chats` with exact `jid`, `name` and `kind` (`person` or `group`). A blank query lists discovered recipients; `--kind person` or `--kind group` is optional. This is recipient discovery, not full-text message search. Multiple name matches remain separate: select and review the exact recipient before sending.
+
+Follow `next_cursor` using the same query, kind, limit, scan_pages, group_timeout, profile and state directory. `--scan-pages` defaults to 5 and allows 1–20 pages of 100 rows per paginated source per call. An empty `chats` array with `complete: false` does not establish that no recipient matches. `next_cursor: null` can also accompany an incomplete result when a source failed or reached a hard bound.
+
+A source failure returns a nonzero exit status and `error.code: SEARCH_PARTIAL`, with available matches and the original source errors retained in `data`. Inspect `data.sources`; continue remaining scans with `next_cursor`, then start a fresh search to retry failed sources. `contacts search` retains its existing contacts-only behavior and page/row cursor for compatibility; use `chats search` for the combined directory.

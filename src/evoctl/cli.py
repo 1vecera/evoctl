@@ -32,7 +32,7 @@ messages_app = typer.Typer(
     no_args_is_help=True, help="Read history, send exact text once, and inspect delivery receipts."
 )
 contacts_app = typer.Typer(no_args_is_help=True, help="Find exact recipient JIDs before sending.")
-chats_app = typer.Typer(no_args_is_help=True, help="Read bounded conversation lists.")
+chats_app = typer.Typer(no_args_is_help=True, help="Search people and groups together, or list conversations.")
 api_app = typer.Typer(no_args_is_help=True, help="Discover and call the complete versioned REST catalog.")
 services_app = typer.Typer(no_args_is_help=True, help="Manage existing service containers without recreating data.")
 mcp_app = typer.Typer(no_args_is_help=True, help="Serve structured tools through the official MCP protocol.")
@@ -225,8 +225,31 @@ def contacts_search(
     scan_pages: int = 5,
     cursor: str = "",
 ) -> None:
-    """Find contacts by name or JID substring; continuation metadata reports incomplete searches."""
+    """Legacy contacts-only lookup. Use chats search to find people and groups together."""
     invoke(context, "contacts_search", query=query, limit=limit, page=page, scan_pages=scan_pages, cursor=cursor)
+
+
+@chats_app.command("search")
+def chats_search(
+    context: typer.Context,
+    query: Annotated[str, typer.Argument()] = "",
+    kind: str = "all",
+    limit: int = 20,
+    scan_pages: int = 5,
+    group_timeout: float = 120.0,
+    cursor: str = "",
+) -> None:
+    """Find people and groups by name, subject, JID or phone; follow next_cursor while incomplete."""
+    invoke(
+        context,
+        "chats_search",
+        query=query,
+        kind=kind,
+        limit=limit,
+        scan_pages=scan_pages,
+        group_timeout=group_timeout,
+        cursor=cursor,
+    )
 
 
 @chats_app.command("list")

@@ -37,7 +37,7 @@ The first profile becomes your default. The remote needs `uv`, SSH access, and D
 ### Your next commands
 
 ```bash
-evoctl contacts search "Alex"
+evoctl chats search "Alex"  # people and groups together
 evoctl chats list --limit 10
 evoctl messages read 15550000001 --limit 10
 evoctl messages send 15550000001 --text "Hello Alex" --request-id hello-alex

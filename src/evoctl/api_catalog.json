@@ -413,17 +413,16 @@
             "type": "object"
           },
           "take": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 1
           },
           "skip": {
-            "type": "integer"
-          },
-          "orderBy": {
-            "type": "object"
+            "type": "integer",
+            "minimum": 0
           }
         }
       },
-      "schema_source": "upstream_openapi",
+      "schema_source": "runtime_verified",
       "query_parameters": [],
       "path_parameters": [
         "instanceName"
@@ -1686,7 +1685,20 @@
         "additionalProperties": true
       },
       "schema_source": "undocumented",
-      "query_parameters": [],
+      "query_parameters": [
+        {
+          "name": "getParticipants",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "true",
+              "false"
+            ]
+          }
+        }
+      ],
       "path_parameters": [
         "instanceName"
       ],

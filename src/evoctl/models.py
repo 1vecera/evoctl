@@ -47,6 +47,34 @@ class ContactsSearch(ProfileInput):
     )
 
 
+class ChatsSearch(ProfileInput):
+    """Find people and groups with bounded scans and a shared, replayable continuation."""
+
+    query: str = Field(
+        default="", max_length=200, description="Case/accent-insensitive name, subject, JID or phone substring."
+    )
+    kind: Literal["all", "person", "group"] = Field(
+        default="all", description="Search both people and groups by default."
+    )
+    limit: int = Field(default=20, ge=1, le=100, description="Maximum returned conversations per call.")
+    scan_pages: int = Field(
+        default=5, ge=1, le=20, description="At most this many 100-row pages per paginated source per call."
+    )
+    group_timeout: float = Field(
+        default=120.0,
+        gt=0,
+        le=120,
+        description="Seconds allowed for the single bulk group request (upstream also fetches pictures). "
+        "Contact/chat requests retain the profile timeout.",
+    )
+    cursor: str = Field(
+        default="",
+        pattern=r"^$|^[a-f0-9]{32}:[1-9][0-9]{0,5}$",
+        description="Opaque next_cursor; reuse all search arguments, plus the same profile and state directory. "
+        "Expires after 30 minutes.",
+    )
+
+
 class ChatsList(ProfileInput):
     """Read a page of conversations without changing their read state."""
 
@@ -60,7 +88,7 @@ class MessagesRead(ProfileInput):
     chat: str = Field(
         min_length=5,
         max_length=200,
-        description="Exact JID or international digits; resolve names via contacts_search.",
+        description="Exact JID or international digits; resolve names via chats_search.",
     )
     limit: int = Field(default=20, ge=1, le=100, description="Maximum returned messages.")
     page: int = Field(default=1, ge=1, description="History page, newest messages first.")
