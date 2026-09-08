@@ -8,7 +8,6 @@ import json
 import os
 import re
 import tempfile
-import unicodedata
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -24,6 +23,7 @@ from evoctl.models import (
     ApiSchema,
     CatalogSearch,
     ChatsList,
+    ChatsSearch,
     ContactsSearch,
     EmptyInput,
     Envelope,
@@ -35,6 +35,7 @@ from evoctl.models import (
     RequestStatus,
     ServicesOperation,
 )
+from evoctl.search import ConversationSearch, SearchCache, fold
 from evoctl.transport import Transport
 from evoctl.worker import EvoError, redact
 
@@ -103,8 +104,17 @@ TOOLS = (
     ToolDefinition(
         "contacts_search",
         "Find WhatsApp contacts",
-        "Search contact names or JIDs within a page budget. Returns exact JIDs and a continuation cursor.",
+        "Legacy contacts-only name/JID search with a page budget. Use chats_search to find people and groups together.",
         ContactsSearch,
+        "read",
+    ),
+    ToolDefinition(
+        "chats_search",
+        "Find WhatsApp people and groups",
+        "Search personal contacts and group conversations together by name, subject, phone or JID. "
+        "Returns exact recipient JIDs, display names and person/group kind; bounded scans expose partial failures "
+        "and replayable continuation. Resolve ambiguous matches explicitly before sending.",
+        ChatsSearch,
         "read",
     ),
     ToolDefinition(
@@ -200,9 +210,7 @@ def normalize_jid(value: str) -> str:
         return value.lstrip("+") + "@s.whatsapp.net"
     if re.fullmatch(r"[0-9][0-9:._-]{3,180}@(s\.whatsapp\.net|g\.us|lid|broadcast|newsletter)", value):
         return value
-    raise EvoError(
-        "INVALID_RECIPIENT", "Use an exact JID or international digits.", "Resolve names with contacts search."
-    )
+    raise EvoError("INVALID_RECIPIENT", "Use an exact JID or international digits.", "Resolve names with chats search.")
 
 
 def normalized_status(status: Any) -> str:
@@ -217,15 +225,6 @@ def normalized_status(status: Any) -> str:
         "PLAYED": "played",
     }
     return values.get(status, "unknown") if isinstance(status, int) else names.get(str(status).upper(), "unknown")
-
-
-def folded(value: str) -> str:
-    """Make contact search insensitive to case and diacritics."""
-    return "".join(
-        character
-        for character in unicodedata.normalize("NFKD", value.casefold())
-        if not unicodedata.combining(character)
-    )
 
 
 class Service:
@@ -266,6 +265,17 @@ class Service:
             parameters = definition.input_model.model_validate(arguments)
             data = getattr(self, name)(parameters)
             result = Envelope(ok=True, data=data)
+            if name == "chats_search" and data["partial"]:
+                result = Envelope(
+                    ok=False,
+                    data=data,
+                    error=EvoError(
+                        "SEARCH_PARTIAL",
+                        "One or more recipient sources failed; available matches are in data.chats.",
+                        "Inspect data.sources. Follow next_cursor for remaining scans; "
+                        "start a new search to retry failures.",
+                    ).as_dict(),
+                )
             if len(result.model_dump_json().encode()) > max_output_bytes:
                 raise EvoError(
                     "OUTPUT_LIMIT",
@@ -366,7 +376,7 @@ class Service:
         matches = []
         scanned = 0
         exhausted = False
-        query = folded(arguments.query)
+        query = fold(arguments.query)
         start_page, start_row = map(int, arguments.cursor.split(":")) if arguments.cursor else (arguments.page, 0)
         next_cursor = None
         for page in range(start_page, start_page + arguments.scan_pages):
@@ -376,7 +386,7 @@ class Service:
                 scanned += 1
                 name = record["pushName"] or ""
                 jid = record["remoteJid"]
-                if query in folded(name + " " + jid):
+                if query in fold(name + " " + jid):
                     matches.append({"jid": jid, "name": name, "kind": "group" if jid.endswith("@g.us") else "person"})
                 if len(matches) == arguments.limit:
                     next_cursor = f"{page}:{row + 1}" if row + 1 < len(records) else f"{page + 1}:0"
@@ -395,6 +405,19 @@ class Service:
             "complete": exhausted,
             "next_cursor": None if exhausted else next_cursor,
         }
+
+    def chats_search(self, arguments: ChatsSearch) -> dict[str, Any]:
+        """Search all recipient sources without sending messages or read receipts."""
+        transport = self.transport(arguments.profile)
+        group_transport = Transport(
+            transport.name, transport.profile.model_copy(update={"timeout": arguments.group_timeout}), self.state
+        )
+        search = ConversationSearch(
+            lambda operation, body, query: self.request(
+                group_transport if operation == "group.fetch_all_groups" else transport, operation, body, query
+            )
+        )
+        return SearchCache(self.state).run(self.scope(transport), arguments, search.advance)
 
     def chats_list(self, arguments: ChatsList) -> dict[str, Any]:
         """Use the chat endpoint's take/skip pagination and return concise identifiers."""

@@ -46,7 +46,8 @@ class Surface:
         """Advertise discovery and separate read/write execution with capability-filtered action enums."""
         descriptions = {
             "discover": "Search workflows and REST routes, or inspect one operation's exact argument schema.",
-            "read": "Read status, contacts, chats, messages or receipts. action=api calls a read REST operation.",
+            "read": "Search people and groups with chats_search; read status, contacts, chats, messages or receipts. "
+            "action=api calls a read REST operation.",
             "write": "Send, pair or administer a deployment. Discover arguments first; writes can affect real users.",
         }
         tools = []

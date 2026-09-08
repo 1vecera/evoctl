@@ -142,6 +142,26 @@ def compile_catalog(source: Path, specifications: Path | None) -> dict[str, Any]
                     },
                 }
                 schema_source = "runtime_verified"
+            if action == "findChats":
+                schema = {
+                    "type": "object",
+                    "properties": {
+                        "where": {"type": "object"},
+                        "take": {"type": "integer", "minimum": 1},
+                        "skip": {"type": "integer", "minimum": 0},
+                    },
+                }
+                schema_source = "runtime_verified"
+            query_parameters = [item for item in metadata.get("parameters", []) if item["in"] == "query"]
+            if action == "fetchAllGroups":
+                query_parameters = [
+                    {
+                        "name": "getParticipants",
+                        "in": "query",
+                        "required": True,
+                        "schema": {"type": "string", "enum": ["true", "false"]},
+                    }
+                ]
             operations.append(
                 {
                     "id": identifier,
@@ -150,7 +170,7 @@ def compile_catalog(source: Path, specifications: Path | None) -> dict[str, Any]
                     "access": access_level(method.upper(), route, action),
                     "body_schema": schema,
                     "schema_source": schema_source,
-                    "query_parameters": [item for item in metadata.get("parameters", []) if item["in"] == "query"],
+                    "query_parameters": query_parameters,
                     "path_parameters": re.findall(r"\{([^}]+)\}", route),
                     "source": str(file.relative_to(source)),
                     "source_line": content[: match.start()].count("\n") + 1,

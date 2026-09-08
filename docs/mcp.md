@@ -4,7 +4,7 @@ evoctl exposes at most three tools. `evoctl_discover` returns compact search res
 
 ## Discover the operation
 
-Call `evoctl_discover` with `{"query":"contacts"}` to search, or `{"operation":"contacts_search"}` to inspect a known workflow. Search results include the execution tool and an exact operation ID. A schema result includes `tool`, `action`, and `arguments_schema`. REST results also include `api`, containing method, path, body schema, and source metadata.
+Call `evoctl_discover` with `{"query":"search group"}` to search, or `{"operation":"chats_search"}` to inspect a known workflow. Search results include the execution tool and an exact operation ID. A schema result includes `tool`, `action`, and `arguments_schema`. REST results also include `api`, containing method, path, body schema, and source metadata.
 
 Search is paginated with `limit` and `offset`; use the returned `next_offset`. It needs no network connection to Evolution. Results and action enums are filtered to the server's capability mode.
 
@@ -13,10 +13,12 @@ Search is paginated with `limit` and `offset`; use the returned `next_offset`. I
 Call `evoctl_read` with:
 
 ```json
-{"action":"contacts_search","arguments":{"query":"Alex","limit":5}}
+{"action":"chats_search","arguments":{"query":"Alex","limit":5}}
 ```
 
-Select the exact JID from that result, then call the same tool with:
+This searches people and groups together by default. Inspect `data.chats` and select the exact JID; ambiguous names must remain explicit before any send. Continue with the returned `next_cursor` and the same arguments, or optionally filter with `kind: "person"` or `kind: "group"`. A `SEARCH_PARTIAL` error retains available matches in structured `data`; inspect `sources` and `complete` even when there are no matches. CLI and MCP cursors share the same private state directory. See [recipient search](recipient-search.md) for bounds and consistency.
+
+Read the selected conversation with:
 
 ```json
 {"action":"messages_read","arguments":{"chat":"15550000001@s.whatsapp.net","limit":10}}
@@ -41,7 +43,7 @@ Pairing uses write action `instance_pair` and returns a private local QR file pl
 Discover `{"operation":"group.fetch_all_groups"}`, then call `evoctl_read` with:
 
 ```json
-{"action":"api","arguments":{"operation":"group.fetch_all_groups","query":{"getParticipants":false}}}
+{"action":"api","arguments":{"operation":"group.fetch_all_groups","query":{"getParticipants":"false"}}}
 ```
 
 The same `api` action exists in `evoctl_write` for permitted mutations. Supply a stable request ID, and inspect the [API contract](api.md) for body schemas, secret references, path/query parameters, and response bounds.

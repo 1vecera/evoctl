@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import json
 import os
 import sys
 from pathlib import Path
@@ -11,6 +12,7 @@ import pytest
 from jsonschema import Draft202012Validator
 from mcp.client import Client
 from mcp.client.stdio import StdioServerParameters
+from test_cli import command
 
 
 @pytest.mark.parametrize("negotiation", ["auto", "legacy"])
@@ -142,3 +144,73 @@ async def test_discovery_and_execution_preserve_capability_boundaries(protocol, 
             )
             assert denied.is_error == (mode != "admin")
         assert not state.messages
+
+
+@pytest.mark.parametrize("failed_source", [False, True])
+async def test_conversation_search_cli_mcp_parity(protocol, failed_source):
+    """CLI and the three-tool MCP surface discover and execute identical search/error contracts."""
+    service, state, store = protocol
+    if failed_source:
+        state.source_failures["/group/fetchAllGroups/Default?getParticipants=false"] = 503
+    parameters = StdioServerParameters(
+        command=str(Path(sys.executable).with_name("evoctl")),
+        args=["mcp", "serve", "--mode", "write"],
+        env={
+            "EVOCTL_CONFIG_DIR": str(store.directory),
+            "EVOCTL_STATE_DIR": str(service.state),
+            "EVOCTL_TEST_KEY": os.environ["EVOCTL_TEST_KEY"],
+        },
+    )
+    async with Client(parameters, read_timeout_seconds=15) as client:
+        listing = await client.list_tools()
+        assert {tool.name for tool in listing.tools} == {"evoctl_discover", "evoctl_read", "evoctl_write"}
+        discovered = await client.call_tool("evoctl_discover", {"query": "search group"})
+        assert "chats_search" in [item["operation"] for item in discovered.structured_content["data"]["items"]]
+        contract = await client.call_tool("evoctl_discover", {"operation": "chats_search"})
+        schema = contract.structured_content["data"]["arguments_schema"]
+        assert schema["properties"]["kind"]["default"] == "all"
+        Draft202012Validator(schema).validate({"query": "novak"})
+        cli = command(protocol, "chats", "search", "novak")
+        mcp = await client.call_tool("evoctl_read", {"action": "chats_search", "arguments": {"query": "novak"}})
+        assert cli.returncode == (1 if failed_source else 0)
+        assert mcp.is_error == failed_source
+        assert json.loads(cli.stdout) == mcp.structured_content
+        bad_cli = command(protocol, "chats", "search", "--kind", "people")
+        bad_mcp = await client.call_tool("evoctl_read", {"action": "chats_search", "arguments": {"kind": "people"}})
+        assert bad_cli.returncode == 2 and bad_mcp.is_error
+        assert json.loads(bad_cli.stdout) == bad_mcp.structured_content
+        assert not state.messages
+
+
+async def test_search_continuation_crosses_cli_and_mcp(protocol):
+    """Opaque cursors retain buffered results and exact replay across separate CLI and MCP processes."""
+    service, state, store = protocol
+    first = json.loads(command(protocol, "chats", "search", "--limit", "1").stdout)
+    cursor = first["data"]["next_cursor"]
+    second = json.loads(command(protocol, "chats", "search", "--limit", "1", "--cursor", cursor).stdout)
+    before = len(state.requests)
+    parameters = StdioServerParameters(
+        command=str(Path(sys.executable).with_name("evoctl")),
+        args=["mcp", "serve"],
+        env={
+            "EVOCTL_CONFIG_DIR": str(store.directory),
+            "EVOCTL_STATE_DIR": str(service.state),
+            "EVOCTL_TEST_KEY": os.environ["EVOCTL_TEST_KEY"],
+        },
+    )
+    async with Client(parameters, read_timeout_seconds=15) as client:
+        replay = await client.call_tool(
+            "evoctl_read", {"action": "chats_search", "arguments": {"limit": 1, "cursor": cursor}}
+        )
+        assert replay.structured_content == second and len(state.requests) == before
+        third = await client.call_tool(
+            "evoctl_read",
+            {
+                "action": "chats_search",
+                "arguments": {"limit": 1, "cursor": second["data"]["next_cursor"]},
+            },
+        )
+        third_cli = json.loads(
+            command(protocol, "chats", "search", "--limit", "1", "--cursor", second["data"]["next_cursor"]).stdout
+        )
+        assert third_cli == third.structured_content and len(state.requests) == before
