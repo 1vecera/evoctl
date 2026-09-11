@@ -19,6 +19,7 @@ from typer._click.exceptions import ClickException
 from evoctl import __version__
 from evoctl.catalog import Mode
 from evoctl.config import ConfigStore, Profile, atomic_write
+from evoctl.contact_import import MAX_CSV_BYTES
 from evoctl.mcp_server import serve
 from evoctl.models import Envelope
 from evoctl.service import Service
@@ -31,7 +32,10 @@ remote_app = typer.Typer(no_args_is_help=True, help="Save, connect, inspect, and
 messages_app = typer.Typer(
     no_args_is_help=True, help="Read history, send exact text once, and inspect delivery receipts."
 )
-contacts_app = typer.Typer(no_args_is_help=True, help="Find exact recipient JIDs before sending.")
+contacts_app = typer.Typer(
+    no_args_is_help=True,
+    help="Import exported Outlook/Google contacts, search the local list, or look up WhatsApp recipients.",
+)
 chats_app = typer.Typer(no_args_is_help=True, help="Search people and groups together, or list conversations.")
 api_app = typer.Typer(no_args_is_help=True, help="Discover and call the complete versioned REST catalog.")
 services_app = typer.Typer(no_args_is_help=True, help="Manage existing service containers without recreating data.")
@@ -227,6 +231,70 @@ def contacts_search(
 ) -> None:
     """Legacy contacts-only lookup. Use chats search to find people and groups together."""
     invoke(context, "contacts_search", query=query, limit=limit, page=page, scan_pages=scan_pages, cursor=cursor)
+
+
+@contacts_app.command("name")
+def contacts_name(
+    context: typer.Context,
+    jid: str,
+    name: Annotated[str | None, typer.Argument(help="Confirmed name saved only in evoctl.")] = None,
+    clear: Annotated[bool, typer.Option(help="Remove the locally saved name.")] = False,
+) -> None:
+    """Save a confirmed name for an exact recipient, or remove it with --clear."""
+    if (name is None and not clear) or (name is not None and clear):
+        raise typer.BadParameter("Provide a name or --clear, exclusively.")
+    invoke(context, "contacts_name", jid=jid, name="" if clear else name)
+
+
+@contacts_app.command("import")
+def contacts_import(
+    context: typer.Context,
+    csv_file: Annotated[str, typer.Argument(help="Exported Outlook or Google CSV file; '-' reads stdin.")],
+    region: Annotated[str, typer.Option(help="Country for national numbers, e.g. CZ. Default requires + or 00.")] = "",
+    name_column: Annotated[list[str] | None, typer.Option(help="Exact name header; repeat to join columns.")] = None,
+    phone_column: Annotated[
+        list[str] | None, typer.Option(help="Exact phone header; repeat for multiple columns.")
+    ] = None,
+    encoding: Annotated[
+        str, typer.Option(help="Override CSV encoding, e.g. cp1250. Default detects UTF-8/UTF-16 BOM.")
+    ] = "",
+    replace: Annotated[
+        bool, typer.Option(help="Replace conflicting saved names; shared-number ambiguities stay out.")
+    ] = False,
+    dry_run: Annotated[bool, typer.Option(help="Preview counts and row issues without saving anything.")] = False,
+) -> None:
+    """Import names locally. Outlook: People > Manage contacts > Export. Google Contacts: Export > Google CSV."""
+    if csv_file == "-":
+        raw = sys.stdin.buffer.read(MAX_CSV_BYTES + 1)
+    else:
+        with Path(csv_file).open("rb") as source:
+            raw = source.read(MAX_CSV_BYTES + 1)
+    if len(raw) > MAX_CSV_BYTES:
+        raise EvoError("INVALID_INPUT", "CSV file exceeds the 4 MiB import limit.")
+    try:
+        csv_text = raw.decode(encoding or ("utf-16" if raw.startswith((b"\xff\xfe", b"\xfe\xff")) else "utf-8-sig"))
+    except (UnicodeError, LookupError) as error:
+        raise EvoError(
+            "INVALID_INPUT",
+            "CSV encoding could not be read.",
+            "Use UTF-8/UTF-16 or specify --encoding, such as cp1250 for a legacy Czech export.",
+        ) from error
+    invoke(
+        context,
+        "contacts_import",
+        csv_text=csv_text,
+        region=region,
+        name_columns=name_column or [],
+        phone_columns=phone_column or [],
+        replace=replace,
+        dry_run=dry_run,
+    )
+
+
+@contacts_app.command("list")
+def contacts_list(context: typer.Context, query: str = "", limit: int = 20, offset: int = 0) -> None:
+    """Search locally saved names offline; follow next_offset. Entries do not prove WhatsApp registration."""
+    invoke(context, "contacts_list", query=query, limit=limit, offset=offset)
 
 
 @chats_app.command("search")

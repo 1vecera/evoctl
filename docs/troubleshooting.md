@@ -18,6 +18,8 @@ Start with `evoctl doctor`. A successful SSH connection does not imply Docker, A
 | WhatsApp `close` or `connecting` | Check the instance, then run `pair --open` and scan with the phone. |
 | `SEND_OUTCOME_UNKNOWN` | Inspect `messages request`, message history, or delivery receipts; preserve the original request ID. |
 | `OUTPUT_LIMIT` or `RESPONSE_TOO_LARGE` | Narrow/paginate the query or use a private output file and an appropriate byte limit. |
+| Full name visible in WhatsApp, missing from search | Export your Outlook/Google contacts and use `contacts import`, then start a fresh search. See [export instructions](recipient-search.md#export-and-import-an-address-book). Evolution may expose only a profile first name; removing accents cannot recover a missing surname. |
+| `CONTACT_NAMES_UNAVAILABLE` | Check permissions and free space in the evoctl state directory; preserve `contact-names.sqlite3` when recovering storage. |
 
 `messages status` reports `pending` when the message exists without receipt records. Evolution may not retain every delivery update; absence of a receipt is not proof of either delivery or non-delivery. The tool never upgrades acceptance into delivery confirmation.
 

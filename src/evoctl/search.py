@@ -29,7 +29,7 @@ def fold(value: str) -> str:
     return "".join(part for part in unicodedata.normalize("NFKD", value.casefold()) if not unicodedata.combining(part))
 
 
-def recipient(record: dict[str, Any], source: str, query: str) -> dict[str, Any] | None:
+def recipient(record: dict[str, Any], source: str, query: str, contact_names: dict[str, str]) -> dict[str, Any] | None:
     """Reduce upstream records to recipient metadata; never retain last messages or group descriptions."""
     raw_jid = record["id" if source == "groups" else "remoteJid"]
     if not isinstance(raw_jid, str):
@@ -40,7 +40,7 @@ def recipient(record: dict[str, Any], source: str, query: str) -> dict[str, Any]
     if jid == "0@s.whatsapp.net":
         return None  # Evolution excludes this system notification identity from personal imports too.
     if not re.fullmatch(r"[0-9][0-9._-]{3,180}@(s\.whatsapp\.net|g\.us|lid)", jid):
-        if jid.endswith(("@broadcast", "@newsletter")):
+        if jid.endswith(("@broadcast", "@newsletter", "@bot")):
             return None
         raise ValueError("Invalid recipient identifier.")
     kind = "group" if jid.endswith("@g.us") else "person"
@@ -48,7 +48,11 @@ def recipient(record: dict[str, Any], source: str, query: str) -> dict[str, Any]
     names = [record[field] for field in fields if record.get(field)]
     if any(not isinstance(name, str) for name in names):
         raise ValueError("Invalid display name.")
+    local_name = contact_names.get(jid, "")
+    if local_name:
+        names.insert(0, local_name)
     name = names[0] if names else ""
+    rank = {"groups": 3, "contacts": 2, "chats": 1}[source] if name else 0
     matched = any(fold(query) in fold(value) for value in [*names, jid, raw_jid])
     if kind == "person" and re.fullmatch(r"[+\d\s().-]+", query):
         digits = re.sub(r"\D", "", query)
@@ -58,16 +62,17 @@ def recipient(record: dict[str, Any], source: str, query: str) -> dict[str, Any]
         "name": name,
         "kind": kind,
         "matched": matched,
-        "rank": {"groups": 3, "contacts": 2, "chats": 1}[source] if name else 0,
+        "rank": 4 if local_name else rank,
     }
 
 
 class ConversationSearch:
     """Combine group subjects, stored contacts and message-backed chat metadata within explicit budgets."""
 
-    def __init__(self, request: Callable[[str, Any, Any], Any]) -> None:
-        """Use the service's catalog, permission checks, bounded timeouts and 1 MiB response bound."""
+    def __init__(self, request: Callable[[str, Any, Any], Any], contact_names: dict[str, str]) -> None:
+        """Bind the service's bounded requests and one snapshot of locally confirmed names."""
         self.request = request
+        self.contact_names = contact_names
 
     def scan(self, state: dict[str, Any], arguments: ChatsSearch) -> int:
         """Advance each available source, retaining earlier matches when another source fails."""
@@ -93,7 +98,11 @@ class ConversationSearch:
                         raise ValueError("Expected a recipient array.")
                     if source != "groups" and len(records) > PAGE_SIZE:
                         raise EvoError("PAGINATION_UNSUPPORTED", "The source ignored the requested page size.")
-                    rows = [row for record in records if (row := recipient(record, source, arguments.query))]
+                    rows = [
+                        row
+                        for record in records
+                        if (row := recipient(record, source, arguments.query, self.contact_names))
+                    ]
                     # A broken proxy repeating a full page must not cause an endless continuation.
                     digest = hashlib.sha256(json.dumps(sorted(row["jid"] for row in rows)).encode()).hexdigest()
                     if source != "groups" and len(records) == PAGE_SIZE and digest in progress["pages_seen"]:

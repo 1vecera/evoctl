@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from evoctl.config import Profile
 
@@ -45,6 +45,51 @@ class ContactsSearch(ProfileInput):
     scan_pages: int = Field(
         default=5, ge=1, le=20, description="Bounded search budget; each upstream page has 100 contacts."
     )
+
+
+class ContactName(ProfileInput):
+    """Save an operator-confirmed name for an exact recipient without changing WhatsApp."""
+
+    jid: str = Field(min_length=5, max_length=200, description="Exact person/group JID or international digits.")
+    name: str = Field(
+        max_length=200,
+        description="Confirmed local display name. An explicit empty string removes the saved name.",
+    )
+
+    @field_validator("name")
+    @classmethod
+    def valid_name(cls, value: str) -> str:
+        """Reject accidental blank names while reserving the explicit empty string for removal."""
+        if value and not value.strip():
+            raise ValueError("Use a nonblank name, or an empty string to remove the saved name.")
+        return value.strip()
+
+
+class ContactsImport(ProfileInput):
+    """Import an exported address book into local phone-to-name storage without cloud access."""
+
+    csv_text: str = Field(min_length=1, max_length=4_194_304, description="Outlook or Google Contacts CSV text.")
+    region: str = Field(
+        default="",
+        pattern=r"^$|^[A-Za-z]{2}$",
+        description="Explicit two-letter country for national phone numbers, e.g. CZ. Empty requires + or 00.",
+    )
+    name_columns: list[str] = Field(
+        default_factory=list, max_length=10, description="Optional exact CSV headers to join into a full name."
+    )
+    phone_columns: list[str] = Field(
+        default_factory=list, max_length=50, description="Optional exact CSV headers containing phone numbers."
+    )
+    replace: bool = Field(default=False, description="Allow replacement of conflicting existing local names.")
+    dry_run: bool = Field(default=False, description="Preview counts and issues without changing local storage.")
+
+
+class ContactsList(ProfileInput):
+    """Search the saved local address book offline without claiming WhatsApp registration."""
+
+    query: str = Field(default="", max_length=200, description="Case/accent-insensitive local name, phone or JID.")
+    limit: int = Field(default=20, ge=1, le=100, description="Maximum returned local phone/name entries.")
+    offset: int = Field(default=0, ge=0, description="Number of matching local entries to skip.")
 
 
 class ChatsSearch(ProfileInput):

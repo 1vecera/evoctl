@@ -11,6 +11,11 @@ Select a deployment once with `evoctl remote use NAME`, or put `--profile NAME` 
 | Continue the same search | `evoctl chats search "Alex" --limit 10 --cursor "$NEXT_CURSOR"` |
 | Search only groups | `evoctl chats search "Study" --kind group` |
 | Legacy contacts-only lookup | `evoctl contacts search "Alex" --limit 10` |
+| Save a confirmed name locally | `evoctl contacts name 15550000001 "Alex Novák"` |
+| Preview an exported address book | `evoctl contacts import contacts.csv --dry-run` |
+| Import local contact names | `evoctl contacts import contacts.csv` |
+| Search local contacts offline | `evoctl contacts list --query "novak"` |
+| Remove the saved local name | `evoctl contacts name 15550000001 --clear` |
 | List conversations | `evoctl chats list --limit 20` |
 | Read one conversation | `evoctl messages read 15550000001 --limit 20` |
 | Preview exact text | `evoctl messages send 15550000001 --text 'Hello' --dry-run` |
@@ -35,6 +40,10 @@ For instance creation, media, groups, integrations, and the rest of the REST sur
 ## Search recipients
 
 `chats search` searches personal contact/display names, group names/subjects and JID/phone substrings together, ignoring case and diacritics. It returns `data.chats` with exact `jid`, `name` and `kind` (`person` or `group`). A blank query lists discovered recipients; `--kind person` or `--kind group` is optional. This is recipient discovery, not full-text message search. Multiple name matches remain separate: select and review the exact recipient before sending.
+
+If WhatsApp shows a full name but Evolution returns only a first name or no name, export **All contacts** from Outlook's People → Manage contacts → Export contacts, or export **Google CSV** from Google Contacts. Preview with `contacts import contacts.csv --dry-run`, then run the import without `--dry-run`. See [export instructions, formats and conflict handling](recipient-search.md#export-and-import-an-address-book). For a single confirmed recipient, `contacts name` saves the mapping directly.
+
+`contacts list --query "novak"` searches the local directory offline, with `--limit` and `--offset` pagination. Imported names also appear in remote searches and chat listing; `Alex Novak` matches saved `Alex Novák`. These commands do not rename or synchronize the phone address book. Start a fresh combined search after changing local names. Use `--region CZ` only if national numbers in the export should be interpreted as Czech numbers; the default requires `+` or `00` international notation. Existing local names are retained unless `--replace` is explicit. `contacts import -` reads CSV from stdin.
 
 Follow `next_cursor` using the same query, kind, limit, scan_pages, group_timeout, profile and state directory. `--scan-pages` defaults to 5 and allows 1–20 pages of 100 rows per paginated source per call. An empty `chats` array with `complete: false` does not establish that no recipient matches. `next_cursor: null` can also accompany an incomplete result when a source failed or reached a hard bound.
 

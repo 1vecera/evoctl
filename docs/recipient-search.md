@@ -2,9 +2,58 @@
 
 Use `evoctl chats search "Alex"` or MCP `evoctl_read` with `{"action":"chats_search","arguments":{"query":"Alex"}}`. Discover the shared schema with `evoctl_discover` and `{"operation":"chats_search"}`. This adds a read action to the existing three-tool surface; it does not add a fourth MCP tool. Legacy `contacts search` / `contacts_search` and `chats list` remain available with their existing contracts.
 
-The search combines saved contacts, message-backed conversations and participating groups. It matches all available display names and group subjects, case and diacritic insensitively, plus exact/partial JIDs and personal phone numbers (including formatting such as `+1 (555) 000-0001`). Group subjects take display precedence over stale chat/contact names; those older names still match. Contact display names take precedence over chat names. Every result has `jid`, `name` and `kind`. Unnamed recipients retain an empty name and their exact JID. Device suffixes and legacy `@c.us` phone aliases deduplicate to the canonical phone JID; `@lid` identities remain distinct because a phone mapping cannot safely be inferred. System notifications (`0@s.whatsapp.net`), broadcasts and newsletters are outside this person/group search.
+The search combines stored contacts, message-backed conversations and participating groups. It matches all available display names and group subjects, case and diacritic insensitively, plus exact/partial JIDs and personal phone numbers (including formatting such as `+1 (555) 000-0001`). Group subjects take display precedence over stale chat/contact names; those older names still match. Contact display names take precedence over chat names. An explicitly saved local name takes precedence over all upstream names while keeping those names searchable. Every result has `jid`, `name` and `kind`. Unnamed recipients retain an empty name and their exact JID. Device suffixes and legacy `@c.us` phone aliases deduplicate to the canonical phone JID; `@lid` identities remain distinct because a phone mapping cannot safely be inferred. System notifications (`0@s.whatsapp.net`), broadcasts, newsletters and bots such as Meta AI (`@bot`) are outside this person/group search. Their presence must not abort the remaining scan.
 
 No name match causes a send. Multiple matches stay separate, and sending still requires an exact recipient JID or international digits. A unique result from an incomplete scan does not establish that the name is unambiguous. Search never sends messages or read receipts and never searches message text. The chat endpoint includes last-message data, but evoctl discards it before matching, caching or returning results. Group descriptions and participant data are also discarded.
+
+## Names missing from Evolution
+
+The WhatsApp app can show an address-book name that Evolution does not expose. In 2.3.7, contact search returns a single `pushName` field, which may contain only a profile first name; the chat endpoint can also return `null` because its SQL selects two columns called `pushName`. Ignoring accents cannot recover a surname absent from both responses. These are upstream data limitations, not evidence that the person is absent from WhatsApp.
+
+Use the built-in local contact list to supply the missing names. Export your address book, preview the import, then save it locally. No Google or Microsoft login is needed in evoctl, and there is no automatic cloud synchronization.
+
+### Export and import an address book
+
+- **Outlook.com / Outlook on the web:** open **People → Manage contacts → Export contacts**, choose **All contacts**, then **Export**. Save the downloaded CSV. [Microsoft's export guide](https://support.microsoft.com/en-us/office/export-contacts-from-outlook-com-or-outlook-on-the-web-578cca22-3550-4c73-b3f0-9978cfeac83f).
+- **Google Contacts:** select all contacts, choose **More actions → Export**, select **Google CSV**, then **Export**. [Google's export guide](https://support.google.com/contacts/answer/7199294).
+
+```bash
+evoctl contacts import ~/Downloads/contacts.csv --dry-run
+evoctl contacts import ~/Downloads/contacts.csv
+evoctl contacts list --query "novak"
+evoctl chats search "Alex Novak"
+```
+
+`contacts list` searches only the local directory and works while WhatsApp or SSH is unavailable. It returns `contacts`, a matching-entry `total`, and `next_offset`; continue with the same query and `--offset`. Results are sorted by accent-insensitive name then JID. Local entries have not been checked for WhatsApp registration (`source: "local"`, `whatsapp_verified: false`). Use `chats search` to find recipients observed by Evolution. Both paths ignore case and diacritics. No local match selects or messages a recipient automatically.
+
+The importer recognizes English Outlook and Google CSV name/phone columns, including several phone numbers per person. It stores one name per phone JID. Email-only contacts, blank names, invalid numbers and numbers shared by different names are skipped and reported. Names differing only in case or diacritics collapse within the same file. A person with several numbers produces several entries. Email addresses, notes and other export fields are not copied into the local directory. Keep your original export if you need those fields.
+
+By default, phone numbers must begin with `+` or `00`. Add `--region CZ` only when unprefixed numbers in that file should be interpreted as Czech numbers (or specify the appropriate two-letter country). The machine's locale is never used to guess a country. Numbers are normalized to E.164 after a phone-length check; this does not verify ownership, active service or WhatsApp membership. Extensions, short codes and ambiguous combined numbers are excluded. Google CSV's ` ::: ` separator between numbers is supported.
+
+UTF-8 and UTF-16 files with a BOM are recognized; UTF-8 without a BOM also works. For a legacy export, pass an explicit encoding such as `--encoding cp1250`. Comma, semicolon and tab delimiters are recognized. Localized or custom column headers need explicit mappings:
+
+```bash
+evoctl contacts import kontakty.csv --name-column "Jméno" --name-column "Příjmení" --phone-column "Mobilní telefon" --region CZ --dry-run
+```
+
+Repeat `--name-column` to join name components and `--phone-column` for additional phone columns. Import accepts at most 4 MiB and 20,000 nonblank contact rows; malformed CSV fails before any names are saved. `rows` counts nonblank records, `skipped_rows` counts records without any usable unambiguous number, and `usable_phones` counts unique import candidates. `inserted`, `updated`, `unchanged` and `conflicts` describe those candidates relative to existing local names. `issues` contains up to 20 row/reason examples, `issue_counts` counts all problems by reason, and `issues_omitted` reports the remaining diagnostics. CSV record numbering starts at 2 after the header. One row can have several phone issues; a row with at least one usable number can still be imported. A successful import can include skipped rows; inspect these counts.
+
+Existing local names are preserved when an export disagrees (`conflicts`). Review a `--dry-run --replace` preview before using `--replace` to update those names. Numbers shared by different names inside the CSV stay excluded even with `--replace`. Re-importing an identical export makes no name changes; contacts absent from a later export are not deleted. Import writes are atomic. To refresh names later, export again and rerun the import.
+
+### Save or remove a single name
+
+After confirming the exact number/JID and full name, save or remove a mapping directly:
+
+```bash
+evoctl contacts name 15550000001 "Alex Novák"
+evoctl chats search "Alex Novak"
+evoctl contacts search "novak"
+evoctl contacts name 15550000001 --clear
+```
+
+Imported and individually saved names share owner-only `contact-names.sqlite3` in the evoctl state directory, scoped to the selected profile and actual deployment target. CLI and MCP use the same storage. It never changes WhatsApp or Evolution. An upstream name update does not erase the local name. In remote searches, local names are applied only to recipients observed in the current remote scan; an old mapping cannot manufacture a current recipient. Use `--clear` to remove a saved or imported entry and restore upstream naming. Contact search and chat listing use the same name and identifier rules as combined search, including skipping non-recipient system rows.
+
+MCP exposes `evoctl_write` actions `contacts_import` (CSV text and import options) and `contacts_name` (`{"jid":"15550000001","name":"Alex Novák"}`; an explicit empty `name` clears it). `evoctl_read` action `contacts_list` searches the local directory. Read-only mode can search saved names but cannot modify them. Names are not included in `remote list`. Changing saved names invalidates an existing combined-search cursor; start a fresh search rather than mixing cached old names with new ones.
 
 ## Bounds and continuation
 
