@@ -8,7 +8,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/github/license/1vecera/evoctl?style=flat-square" alt="MIT license"></a>
 </p>
 
-<p align="center"><a href="#quickstart">Quickstart</a> · <a href="#three-tools-for-your-agent">MCP setup</a> · <a href="docs/cli.md">Command reference</a> · <a href="docs/api.md">API catalog</a> · <a href="CONTRIBUTING.md">Contribute</a></p>
+<p align="center"><a href="#quickstart">Quickstart</a> · <a href="#local-contacts">Local contacts</a> · <a href="#three-tools-for-your-agent">MCP setup</a> · <a href="docs/cli.md">Command reference</a> · <a href="docs/api.md">API catalog</a> · <a href="CONTRIBUTING.md">Contribute</a></p>
 
 **Give your scripts and AI agents a direct line to [Evolution API](https://github.com/evolution-foundation/evolution-api).** Connect a deployment, find a conversation, send a message, and inspect its receipt—from your terminal or an MCP client.
 
@@ -46,16 +46,6 @@ evoctl messages status MESSAGE_ID
 
 The number is an example. Resolve the intended recipient and use the exact reviewed text. Reuse the same request ID for the same logical send; `pending` is an API receipt, not delivery confirmation.
 
-Missing full names? Export your contacts from Outlook or Google Contacts and use the built-in local address book:
-
-```bash
-evoctl contacts import ~/Downloads/contacts.csv --dry-run
-evoctl contacts import ~/Downloads/contacts.csv
-evoctl contacts list --query "novak"
-```
-
-Names match without diacritics in local and WhatsApp searches. Existing names are preserved; inspect the import's skipped-row and conflict counts. [Export instructions and local contact storage →](docs/recipient-search.md#export-and-import-an-address-book)
-
 <details>
 <summary><strong>Pair a phone, open the GUI, or monitor your remote</strong></summary>
 
@@ -71,6 +61,28 @@ Pairing uses WhatsApp's Linked devices screen. GUI forwarding binds to local loo
 
 </details>
 
+## Local contacts
+
+**Find saved names, even without diacritics.** WhatsApp can show a full address-book name while Evolution returns only a profile first name. Export your contacts once and import them into evoctl's built-in local directory:
+
+| Address book | Export |
+| --- | --- |
+| Outlook.com / Outlook on the web | **People → Manage contacts → Export contacts → All contacts → Export**. |
+| Google Contacts | Select all contacts, then **More actions → Export → Google CSV → Export**. |
+
+```bash
+evoctl contacts import ~/Downloads/contacts.csv --dry-run
+evoctl contacts import ~/Downloads/contacts.csv
+evoctl contacts list --query "novak"   # search local names offline
+evoctl chats search "Alex Novak"      # find WhatsApp recipients using those names
+```
+
+`Alex Novak` matches `Alex Novák`; uppercase queries work too. CLI and MCP share the same private directory for the selected deployment. Local lookup works without a WhatsApp connection, and imported names also appear in remote searches and chat listing. A local entry alone does not confirm WhatsApp membership.
+
+Inspect the preview's skipped-row and conflict counts before importing. Numbers need a `+` or `00` international prefix by default; use `--region CZ` only if national numbers in the file should be interpreted as Czech numbers. Existing local names are preserved unless `--replace` is explicit. Numbers shared by different names are skipped, and email-only records stay in the original export.
+
+No Google or Microsoft login is needed in evoctl. To refresh your list, export again and repeat the import. For one confirmed recipient, use `evoctl contacts name 15550000001 "Alex Novák"`; `--clear` removes its saved name. [Export guides, supported CSV formats and import options →](docs/recipient-search.md#export-and-import-an-address-book)
+
 ## Three tools for your agent
 
 **Discover → read → write.** That is the entire MCP surface, including administrative mode. Workflow and API schemas are fetched on demand, and every call still goes through the shared operation validator.
@@ -78,8 +90,8 @@ Pairing uses WhatsApp's Linked devices screen. GUI forwarding binds to local loo
 | Tool | What it does |
 | --- | --- |
 | `evoctl_discover` | Search workflows and REST routes, or request one exact argument schema. |
-| `evoctl_read` | Inspect status, contacts, chats, messages, receipts, and read-only API operations. |
-| `evoctl_write` | Send, pair, or perform permitted API and remote-administration operations. |
+| `evoctl_read` | Search local contacts and WhatsApp conversations; read status, messages, receipts, and API data. |
+| `evoctl_write` | Import or edit local contact names, send, pair, or perform permitted API and remote-administration operations. |
 
 Add this to your MCP client's configuration after installing `evoctl`:
 
@@ -105,7 +117,7 @@ An agent calls `evoctl_discover` with `{"operation":"messages_read"}` to get the
 }
 ```
 
-Use `action: "api"` for a catalog operation. **Read mode** exposes only discovery and reading. **Write mode** adds messaging, pairing, and locally saved contact names. **Admin mode** also permits remote setup, service control, and administrative API calls. A mutation cannot bypass those boundaries through the read tool. [MCP examples and capability details →](docs/mcp.md)
+Use read action `contacts_list` for offline contact lookup and write action `contacts_import` for CSV text; discover their argument schemas first. Use `action: "api"` for a catalog operation. **Read mode** exposes only discovery and reading. **Write mode** adds messaging, pairing, and local contact imports and edits. **Admin mode** also permits remote setup, service control, and administrative API calls. A mutation cannot bypass those boundaries through the read tool. [MCP examples and capability details →](docs/mcp.md)
 
 ## The whole REST catalog, within reach
 
