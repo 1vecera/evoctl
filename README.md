@@ -46,6 +46,16 @@ evoctl messages status MESSAGE_ID
 
 The number is an example. Resolve the intended recipient and use the exact reviewed text. Reuse the same request ID for the same logical send; `pending` is an API receipt, not delivery confirmation.
 
+Missing full names? Export your contacts from Outlook or Google Contacts and use the built-in local address book:
+
+```bash
+evoctl contacts import ~/Downloads/contacts.csv --dry-run
+evoctl contacts import ~/Downloads/contacts.csv
+evoctl contacts list --query "novak"
+```
+
+Names match without diacritics in local and WhatsApp searches. Existing names are preserved; inspect the import's skipped-row and conflict counts. [Export instructions and local contact storage →](docs/recipient-search.md#export-and-import-an-address-book)
+
 <details>
 <summary><strong>Pair a phone, open the GUI, or monitor your remote</strong></summary>
 

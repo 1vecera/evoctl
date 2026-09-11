@@ -17,6 +17,7 @@ from pydantic import BaseModel, ValidationError
 
 from evoctl.catalog import ACCESS, Catalog, Mode
 from evoctl.config import ConfigStore, private_directory, state_directory
+from evoctl.contact_import import parse_contacts
 from evoctl.contact_names import ContactNames
 from evoctl.ledger import SendLedger
 from evoctl.models import (
@@ -26,6 +27,8 @@ from evoctl.models import (
     ChatsList,
     ChatsSearch,
     ContactName,
+    ContactsImport,
+    ContactsList,
     ContactsSearch,
     EmptyInput,
     Envelope,
@@ -37,7 +40,7 @@ from evoctl.models import (
     RequestStatus,
     ServicesOperation,
 )
-from evoctl.search import ConversationSearch, SearchCache, recipient
+from evoctl.search import ConversationSearch, SearchCache, fold, recipient
 from evoctl.transport import Transport
 from evoctl.worker import EvoError, redact
 
@@ -117,6 +120,23 @@ TOOLS = (
         "Used by contact/chat search and chat listing; never renames a WhatsApp contact or sends a message.",
         ContactName,
         "write",
+    ),
+    ToolDefinition(
+        "contacts_import",
+        "Import a local contact list",
+        "Import Outlook or Google Contacts CSV text into local name storage. Preview with dry_run; "
+        "existing names are preserved unless replace=true. No cloud access or WhatsApp writes. "
+        "Export help: docs/recipient-search.md in the evoctl repository.",
+        ContactsImport,
+        "write",
+    ),
+    ToolDefinition(
+        "contacts_list",
+        "Search local contacts offline",
+        "List or search locally saved names without network access. Local entries do not prove WhatsApp "
+        "registration; use chats_search to find recipients observed by Evolution.",
+        ContactsList,
+        "read",
     ),
     ToolDefinition(
         "chats_search",
@@ -423,6 +443,34 @@ class Service:
             raise EvoError("INVALID_RECIPIENT", "Saved names require an exact person or group JID.")
         ContactNames(self.state).set(self.scope(transport), row["jid"], arguments.name)
         return {"jid": row["jid"], "name": arguments.name, "saved": bool(arguments.name)}
+
+    def contacts_import(self, arguments: ContactsImport) -> dict[str, Any]:
+        """Validate the full export then merge exact phone/name pairs, without calling Evolution or a cloud provider."""
+        transport = self.transport(arguments.profile)
+        parsed = parse_contacts(arguments)
+        counts = ContactNames(self.state).merge(
+            self.scope(transport), parsed.names, replace=arguments.replace, dry_run=arguments.dry_run
+        )
+        return {**parsed.summary(), **counts, "dry_run": arguments.dry_run}
+
+    def contacts_list(self, arguments: ContactsList) -> dict[str, Any]:
+        """Use the common accent/phone matching rules against local names, independently of remote availability."""
+        transport = self.transport(arguments.profile)
+        names = ContactNames(self.state).read(self.scope(transport))
+        contacts = []
+        for jid in names:
+            row = recipient({"remoteJid": jid}, "contacts", arguments.query, names)
+            if row and row["matched"]:
+                contacts.append({key: row[key] for key in ("jid", "name", "kind")})
+        contacts.sort(key=lambda row: (fold(row["name"]), row["jid"]))
+        end = arguments.offset + arguments.limit
+        return {
+            "contacts": contacts[arguments.offset : end],
+            "total": len(contacts),
+            "next_offset": end if end < len(contacts) else None,
+            "source": "local",
+            "whatsapp_verified": False,
+        }
 
     def chats_search(self, arguments: ChatsSearch) -> dict[str, Any]:
         """Search all recipient sources without sending messages or read receipts."""

@@ -59,3 +59,40 @@ class ContactNames:
                 )
             else:
                 database.execute("DELETE FROM names WHERE scope=? AND jid=?", (scope, jid))
+
+    def merge(self, scope: str, names: dict[str, str], *, replace: bool, dry_run: bool) -> dict[str, int]:
+        """Preview or atomically merge a whole export, retaining prior mappings unless replacement is explicit."""
+        if dry_run or not names:
+            return self.changes(self.read(scope), names, replace)[0]
+        with self.connection(write=True) as database:
+            database.execute("BEGIN IMMEDIATE")
+            database.execute(
+                "CREATE TABLE IF NOT EXISTS names (scope TEXT NOT NULL, jid TEXT NOT NULL, "
+                "name TEXT NOT NULL, PRIMARY KEY (scope, jid))"
+            )
+            existing = dict(database.execute("SELECT jid, name FROM names WHERE scope=?", (scope,)))
+            counts, changes = self.changes(existing, names, replace)
+            database.executemany(
+                "INSERT INTO names VALUES (?, ?, ?) ON CONFLICT (scope, jid) DO UPDATE SET name=excluded.name",
+                [(scope, jid, name) for jid, name in changes.items()],
+            )
+        return counts
+
+    @staticmethod
+    def changes(
+        existing: dict[str, str], names: dict[str, str], replace: bool
+    ) -> tuple[dict[str, int], dict[str, str]]:
+        """Use the same conflict policy for previews and serialized writes without deleting absent contacts."""
+        counts = dict(inserted=0, updated=0, unchanged=0, conflicts=0)
+        changes = {}
+        for jid, name in names.items():
+            if jid not in existing:
+                category = "inserted"
+            elif existing[jid] == name:
+                category = "unchanged"
+            else:
+                category = "updated" if replace else "conflicts"
+            counts[category] += 1
+            if category in {"inserted", "updated"}:
+                changes[jid] = name
+        return counts, changes

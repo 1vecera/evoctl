@@ -100,6 +100,33 @@ async def test_saved_contact_names_are_shared_by_cli_and_running_mcp(protocol):
         assert not state.messages
 
 
+async def test_csv_import_and_offline_list_cli_mcp_parity(protocol):
+    """A running MCP process shares CSV previews, local imports and offline name search with the CLI."""
+    service, state, store = protocol
+    csv_text = "Name,Phone 1 - Value\nJiří Dvořák,+15550000001\n"
+    parameters = StdioServerParameters(
+        command=str(Path(sys.executable).with_name("evoctl")),
+        args=["mcp", "serve", "--mode", "write"],
+        env={"EVOCTL_CONFIG_DIR": str(store.directory), "EVOCTL_STATE_DIR": str(service.state)},
+    )
+    async with Client(parameters, read_timeout_seconds=15) as client:
+        contract = await client.call_tool("evoctl_discover", {"operation": "contacts_import"})
+        assert contract.structured_content["data"]["tool"] == "evoctl_write"
+        cli_preview = command(protocol, "contacts", "import", "-", "--dry-run", input_text=csv_text)
+        mcp_preview = await client.call_tool(
+            "evoctl_write", {"action": "contacts_import", "arguments": {"csv_text": csv_text, "dry_run": True}}
+        )
+        assert not mcp_preview.is_error and json.loads(cli_preview.stdout) == mcp_preview.structured_content
+        imported = await client.call_tool(
+            "evoctl_write", {"action": "contacts_import", "arguments": {"csv_text": csv_text}}
+        )
+        assert not imported.is_error and imported.structured_content["data"]["inserted"] == 1
+        cli_list = command(protocol, "contacts", "list", "--query", "dvorak")
+        mcp_list = await client.call_tool("evoctl_read", {"action": "contacts_list", "arguments": {"query": "dvorak"}})
+        assert not mcp_list.is_error and json.loads(cli_list.stdout) == mcp_list.structured_content
+        assert mcp_list.structured_content["data"]["total"] == 1 and not state.requests
+
+
 @pytest.mark.parametrize("connection", ["open", "close"])
 async def test_bundled_pairing_keeps_qr_image_content(protocol, connection):
     """Pairing through the bundled write tool returns an image only when a phone scan is needed."""

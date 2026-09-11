@@ -24,7 +24,7 @@ Read the selected conversation with:
 {"action":"messages_read","arguments":{"chat":"15550000001@s.whatsapp.net","limit":10}}
 ```
 
-Other read actions are `status`, `remotes_list`, `chats_list`, `message_status`, and `request_status`. Omit `profile` to select the default, or include it in the operation's `arguments`.
+Other read actions are `status`, `remotes_list`, `contacts_list`, `chats_list`, `message_status`, and `request_status`. Omit `profile` to select the default, or include it in the operation's `arguments`.
 
 ## Send reviewed text
 
@@ -38,7 +38,25 @@ Keep the same `request_id` for the same logical send. Use `dry_run: true` to pre
 
 Pairing uses write action `instance_pair` and returns a private local QR file plus MCP image content when a phone scan is needed. An open session is left connected.
 
-## Save a confirmed contact name
+## Import or save local contacts
+
+When WhatsApp has address-book names missing from Evolution, guide the user to export all contacts from Outlook's People → Manage contacts → Export contacts, or choose Google CSV in Google Contacts' Export action. See [export instructions](recipient-search.md#export-and-import-an-address-book). Discover `contacts_import`, then preview through `evoctl_write`:
+
+```json
+{"action":"contacts_import","arguments":{"csv_text":"Name,Mobile Phone\nAlex Novák,+15550000001\n","dry_run":true}}
+```
+
+Import takes CSV text rather than reading an arbitrary local file through MCP. CLI `contacts import contacts.csv` reads the file locally. Use `dry_run: false` to persist validated names, `region: "CZ"` only for explicitly Czech national numbers, `name_columns`/`phone_columns` for custom headers, and `replace: true` only to replace conflicting existing local names. Inspect counts and row issues; a successful import can skip unusable or ambiguous numbers. The 4 MiB/20,000-row import limit applies to both interfaces; the MCP client's own message-size limit may be smaller. No cloud credentials or synchronization are needed.
+
+Search the shared local directory without network access using `evoctl_read`:
+
+```json
+{"action":"contacts_list","arguments":{"query":"novak","limit":20,"offset":0}}
+```
+
+Follow `next_offset` for more matching entries. A local entry does not establish WhatsApp registration (`whatsapp_verified: false`); `chats_search` returns recipients observed by Evolution. Local names are applied by both remote search operations and chat listing. Changes invalidate existing combined-search cursors.
+
+### Save a single confirmed name
 
 When Evolution lacks the full name shown in the WhatsApp app, discover `contacts_name` and call `evoctl_write` with `{"action":"contacts_name","arguments":{"jid":"15550000001","name":"Alex Novák"}}`. Only save a name after confirming its exact recipient; never derive a number from a similar name. This is an idempotent local name change and needs no send request ID. An explicit empty `name` removes it. CLI and MCP searches match the saved name without case or diacritics while retaining upstream names as search alternatives. The mapping is private and target-scoped, never sent to WhatsApp, and never manufactures a recipient absent from the remote scan. Start a fresh search after editing names; existing combined-search cursors are invalidated.
 
