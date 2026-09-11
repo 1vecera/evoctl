@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from evoctl.config import Profile
 
@@ -45,6 +45,24 @@ class ContactsSearch(ProfileInput):
     scan_pages: int = Field(
         default=5, ge=1, le=20, description="Bounded search budget; each upstream page has 100 contacts."
     )
+
+
+class ContactName(ProfileInput):
+    """Save an operator-confirmed name for an exact recipient without changing WhatsApp."""
+
+    jid: str = Field(min_length=5, max_length=200, description="Exact person/group JID or international digits.")
+    name: str = Field(
+        max_length=200,
+        description="Confirmed local display name. An explicit empty string removes the saved name.",
+    )
+
+    @field_validator("name")
+    @classmethod
+    def valid_name(cls, value: str) -> str:
+        """Reject accidental blank names while reserving the explicit empty string for removal."""
+        if value and not value.strip():
+            raise ValueError("Use a nonblank name, or an empty string to remove the saved name.")
+        return value.strip()
 
 
 class ChatsSearch(ProfileInput):

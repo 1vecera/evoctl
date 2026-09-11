@@ -95,7 +95,7 @@ An agent calls `evoctl_discover` with `{"operation":"messages_read"}` to get the
 }
 ```
 
-Use `action: "api"` for a catalog operation. **Read mode** exposes only discovery and reading. **Write mode** adds messaging and pairing. **Admin mode** also permits remote setup, service control, and administrative API calls. A mutation cannot bypass those boundaries through the read tool. [MCP examples and capability details →](docs/mcp.md)
+Use `action: "api"` for a catalog operation. **Read mode** exposes only discovery and reading. **Write mode** adds messaging, pairing, and locally saved contact names. **Admin mode** also permits remote setup, service control, and administrative API calls. A mutation cannot bypass those boundaries through the read tool. [MCP examples and capability details →](docs/mcp.md)
 
 ## The whole REST catalog, within reach
 

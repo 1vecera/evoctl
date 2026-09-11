@@ -287,6 +287,7 @@ def test_system_notifications_do_not_invalidate_personal_and_group_chats(protoco
             {"remoteJid": "0@s.whatsapp.net", "pushName": None},
             {"remoteJid": "status@broadcast", "pushName": None},
             {"remoteJid": "12345@newsletter", "pushName": "Announcement"},
+            {"remoteJid": "12345@bot", "pushName": "Meta AI"},
         ]
     )
     result = service.invoke("chats_search", {})
@@ -294,6 +295,37 @@ def test_system_notifications_do_not_invalidate_personal_and_group_chats(protoco
     assert {row["kind"] for row in result.data["chats"]} == {"person", "group"}
     assert result.data["sources"]["chats"]["status"] == "complete"
     assert all(row["jid"] != "0@s.whatsapp.net" for row in result.data["chats"])
+
+
+@pytest.mark.parametrize("operation", ["contacts_search", "chats_search"])
+def test_bot_contacts_do_not_abort_later_pages(protocol, operation):
+    """An unrelated Meta AI contact must not hide a person beyond the current scan budget."""
+    service, state, _ = protocol
+    state.contacts = [{"remoteJid": f"1555000{index:04d}@s.whatsapp.net"} for index in range(99)]
+    state.contacts.extend(
+        [
+            {"remoteJid": "12345@bot", "pushName": "Meta AI"},
+            {"remoteJid": "15550000999@s.whatsapp.net", "pushName": "Čeněk"},
+        ]
+    )
+    arguments = {"query": "cenek", "scan_pages": 1}
+    first = service.invoke(operation, arguments)
+    assert first.ok and not first.data["complete"] and first.data["next_cursor"]
+    second = service.invoke(operation, {**arguments, "cursor": first.data["next_cursor"]})
+    assert second.ok and second.data["complete"]
+    assert second.data["contacts" if operation == "contacts_search" else "chats"] == [
+        {"jid": "15550000999@s.whatsapp.net", "name": "Čeněk", "kind": "person"}
+    ]
+
+
+def test_chat_listing_continues_past_a_filtered_system_page(protocol):
+    """Filtering bots cannot turn a full upstream page into a false end of the chat list."""
+    service, state, _ = protocol
+    state.chats.insert(0, {"remoteJid": "12345@bot", "pushName": "Meta AI"})
+    first = service.invoke("chats_list", {"limit": 1})
+    assert first.ok and not first.data["chats"] and first.data["next_offset"] == 1
+    second = service.invoke("chats_list", {"limit": 1, "offset": first.data["next_offset"]})
+    assert second.ok and second.data["chats"][0]["jid"] == "15550000001@s.whatsapp.net"
 
 
 def test_corrupt_search_cache_returns_structured_error(protocol):

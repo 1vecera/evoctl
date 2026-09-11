@@ -38,6 +38,10 @@ Keep the same `request_id` for the same logical send. Use `dry_run: true` to pre
 
 Pairing uses write action `instance_pair` and returns a private local QR file plus MCP image content when a phone scan is needed. An open session is left connected.
 
+## Save a confirmed contact name
+
+When Evolution lacks the full name shown in the WhatsApp app, discover `contacts_name` and call `evoctl_write` with `{"action":"contacts_name","arguments":{"jid":"15550000001","name":"Alex Novák"}}`. Only save a name after confirming its exact recipient; never derive a number from a similar name. This is an idempotent local name change and needs no send request ID. An explicit empty `name` removes it. CLI and MCP searches match the saved name without case or diacritics while retaining upstream names as search alternatives. The mapping is private and target-scoped, never sent to WhatsApp, and never manufactures a recipient absent from the remote scan. Start a fresh search after editing names; existing combined-search cursors are invalidated.
+
 ## Call a REST operation
 
 Discover `{"operation":"group.fetch_all_groups"}`, then call `evoctl_read` with:
@@ -53,7 +57,7 @@ The same `api` action exists in `evoctl_write` for permitted mutations. Supply a
 | Server mode | Tool count | Permissions |
 | --- | --- | --- |
 | `read` (default) | 2 | Discovery and read operations. |
-| `write` | 3 | Read operations plus messages, pairing, and messaging API writes. |
+| `write` | 3 | Read operations plus local contact names, messages, pairing, and messaging API writes. |
 | `admin` | 3 | Also profile management, SSH connect/key setup/disconnect, GUI forwarding, service control, and administrative API calls. |
 
 The read tool cannot perform a mutation, even through `action: api`. The write tool cannot perform administrative operations in write mode. Unavailable operations are excluded from discovery and rejected at execution. Tool annotations remain accurate for the read/write boundary; the write tool conservatively advertises possible destructive effects.

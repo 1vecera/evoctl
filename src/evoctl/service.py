@@ -17,6 +17,7 @@ from pydantic import BaseModel, ValidationError
 
 from evoctl.catalog import ACCESS, Catalog, Mode
 from evoctl.config import ConfigStore, private_directory, state_directory
+from evoctl.contact_names import ContactNames
 from evoctl.ledger import SendLedger
 from evoctl.models import (
     ApiCall,
@@ -24,6 +25,7 @@ from evoctl.models import (
     CatalogSearch,
     ChatsList,
     ChatsSearch,
+    ContactName,
     ContactsSearch,
     EmptyInput,
     Envelope,
@@ -35,7 +37,7 @@ from evoctl.models import (
     RequestStatus,
     ServicesOperation,
 )
-from evoctl.search import ConversationSearch, SearchCache, fold
+from evoctl.search import ConversationSearch, SearchCache, recipient
 from evoctl.transport import Transport
 from evoctl.worker import EvoError, redact
 
@@ -107,6 +109,14 @@ TOOLS = (
         "Legacy contacts-only name/JID search with a page budget. Use chats_search to find people and groups together.",
         ContactsSearch,
         "read",
+    ),
+    ToolDefinition(
+        "contacts_name",
+        "Save a contact name",
+        "Save or clear an operator-confirmed local name for an exact JID. "
+        "Used by contact/chat search and chat listing; never renames a WhatsApp contact or sends a message.",
+        ContactName,
+        "write",
     ),
     ToolDefinition(
         "chats_search",
@@ -376,7 +386,7 @@ class Service:
         matches = []
         scanned = 0
         exhausted = False
-        query = fold(arguments.query)
+        contact_names = ContactNames(self.state).read(self.scope(transport))
         start_page, start_row = map(int, arguments.cursor.split(":")) if arguments.cursor else (arguments.page, 0)
         next_cursor = None
         for page in range(start_page, start_page + arguments.scan_pages):
@@ -384,10 +394,9 @@ class Service:
             offset = start_row if page == start_page else 0
             for row, record in enumerate(records[offset:], start=offset):
                 scanned += 1
-                name = record["pushName"] or ""
-                jid = record["remoteJid"]
-                if query in fold(name + " " + jid):
-                    matches.append({"jid": jid, "name": name, "kind": "group" if jid.endswith("@g.us") else "person"})
+                match = recipient(record, "contacts", arguments.query, contact_names)
+                if match and match["matched"]:
+                    matches.append({key: match[key] for key in ("jid", "name", "kind")})
                 if len(matches) == arguments.limit:
                     next_cursor = f"{page}:{row + 1}" if row + 1 < len(records) else f"{page + 1}:0"
                     exhausted = row + 1 == len(records) and len(records) < 100
@@ -406,37 +415,55 @@ class Service:
             "next_cursor": None if exhausted else next_cursor,
         }
 
+    def contacts_name(self, arguments: ContactName) -> dict[str, Any]:
+        """Store the operator's exact mapping locally; never infer a name-to-number association."""
+        transport = self.transport(arguments.profile)
+        row = recipient({"remoteJid": normalize_jid(arguments.jid)}, "contacts", "", {})
+        if row is None:
+            raise EvoError("INVALID_RECIPIENT", "Saved names require an exact person or group JID.")
+        ContactNames(self.state).set(self.scope(transport), row["jid"], arguments.name)
+        return {"jid": row["jid"], "name": arguments.name, "saved": bool(arguments.name)}
+
     def chats_search(self, arguments: ChatsSearch) -> dict[str, Any]:
         """Search all recipient sources without sending messages or read receipts."""
         transport = self.transport(arguments.profile)
+        scope = self.scope(transport)
+        contact_names = ContactNames(self.state).read(scope)
         group_transport = Transport(
             transport.name, transport.profile.model_copy(update={"timeout": arguments.group_timeout}), self.state
         )
         search = ConversationSearch(
             lambda operation, body, query: self.request(
                 group_transport if operation == "group.fetch_all_groups" else transport, operation, body, query
-            )
+            ),
+            contact_names,
         )
-        return SearchCache(self.state).run(self.scope(transport), arguments, search.advance)
+        # A changed local name must not silently mix with a cursor's previously cached names.
+        binding_scope = scope + json.dumps(contact_names, sort_keys=True) if contact_names else scope
+        return SearchCache(self.state).run(binding_scope, arguments, search.advance)
 
     def chats_list(self, arguments: ChatsList) -> dict[str, Any]:
         """Use the chat endpoint's take/skip pagination and return concise identifiers."""
         transport = self.transport(arguments.profile)
+        contact_names = ContactNames(self.state).read(self.scope(transport))
         records = self.request(
             transport, "chat.find_chats", {"where": {}, "take": arguments.limit, "skip": arguments.offset}
         )
         chats = []
         for record in records:
+            row = recipient(record, "chats", "", contact_names)
+            if row is None:
+                continue
             chats.append(
                 {
-                    "jid": record["remoteJid"],
-                    "name": record.get("pushName") or record.get("name") or "",
+                    "jid": row["jid"],
+                    "name": row["name"],
                     "unread": record.get("unreadMessages", 0),
                 }
             )
         return {
             "chats": chats,
-            "next_offset": arguments.offset + arguments.limit if len(chats) == arguments.limit else None,
+            "next_offset": arguments.offset + arguments.limit if len(records) == arguments.limit else None,
         }
 
     def messages_read(self, arguments: MessagesRead) -> dict[str, Any]:

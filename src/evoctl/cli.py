@@ -229,6 +229,19 @@ def contacts_search(
     invoke(context, "contacts_search", query=query, limit=limit, page=page, scan_pages=scan_pages, cursor=cursor)
 
 
+@contacts_app.command("name")
+def contacts_name(
+    context: typer.Context,
+    jid: str,
+    name: Annotated[str | None, typer.Argument(help="Confirmed name saved only in evoctl.")] = None,
+    clear: Annotated[bool, typer.Option(help="Remove the locally saved name.")] = False,
+) -> None:
+    """Save a confirmed name for an exact recipient, or remove it with --clear."""
+    if (name is None and not clear) or (name is not None and clear):
+        raise typer.BadParameter("Provide a name or --clear, exclusively.")
+    invoke(context, "contacts_name", jid=jid, name="" if clear else name)
+
+
 @chats_app.command("search")
 def chats_search(
     context: typer.Context,

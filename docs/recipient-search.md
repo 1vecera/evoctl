@@ -2,9 +2,26 @@
 
 Use `evoctl chats search "Alex"` or MCP `evoctl_read` with `{"action":"chats_search","arguments":{"query":"Alex"}}`. Discover the shared schema with `evoctl_discover` and `{"operation":"chats_search"}`. This adds a read action to the existing three-tool surface; it does not add a fourth MCP tool. Legacy `contacts search` / `contacts_search` and `chats list` remain available with their existing contracts.
 
-The search combines saved contacts, message-backed conversations and participating groups. It matches all available display names and group subjects, case and diacritic insensitively, plus exact/partial JIDs and personal phone numbers (including formatting such as `+1 (555) 000-0001`). Group subjects take display precedence over stale chat/contact names; those older names still match. Contact display names take precedence over chat names. Every result has `jid`, `name` and `kind`. Unnamed recipients retain an empty name and their exact JID. Device suffixes and legacy `@c.us` phone aliases deduplicate to the canonical phone JID; `@lid` identities remain distinct because a phone mapping cannot safely be inferred. System notifications (`0@s.whatsapp.net`), broadcasts and newsletters are outside this person/group search.
+The search combines stored contacts, message-backed conversations and participating groups. It matches all available display names and group subjects, case and diacritic insensitively, plus exact/partial JIDs and personal phone numbers (including formatting such as `+1 (555) 000-0001`). Group subjects take display precedence over stale chat/contact names; those older names still match. Contact display names take precedence over chat names. An explicitly saved local name takes precedence over all upstream names while keeping those names searchable. Every result has `jid`, `name` and `kind`. Unnamed recipients retain an empty name and their exact JID. Device suffixes and legacy `@c.us` phone aliases deduplicate to the canonical phone JID; `@lid` identities remain distinct because a phone mapping cannot safely be inferred. System notifications (`0@s.whatsapp.net`), broadcasts, newsletters and bots such as Meta AI (`@bot`) are outside this person/group search. Their presence must not abort the remaining scan.
 
 No name match causes a send. Multiple matches stay separate, and sending still requires an exact recipient JID or international digits. A unique result from an incomplete scan does not establish that the name is unambiguous. Search never sends messages or read receipts and never searches message text. The chat endpoint includes last-message data, but evoctl discards it before matching, caching or returning results. Group descriptions and participant data are also discarded.
+
+## Names missing from Evolution
+
+The WhatsApp app can show an address-book name that Evolution does not expose. In 2.3.7, contact search returns a single `pushName` field, which may contain only a profile first name; the chat endpoint can also return `null` because its SQL selects two columns called `pushName`. Ignoring accents cannot recover a surname absent from both responses. These are upstream data limitations, not evidence that the person is absent from WhatsApp.
+
+After confirming the exact number/JID and full name, save the mapping locally:
+
+```bash
+evoctl contacts name 15550000001 "Alex Novák"
+evoctl chats search "Alex Novak"
+evoctl contacts search "novak"
+evoctl contacts name 15550000001 --clear
+```
+
+This stores one display name per canonical person/group JID in owner-only `contact-names.sqlite3`, shared by CLI and MCP in the evoctl state directory and scoped to the selected profile and actual deployment target. It never changes WhatsApp or Evolution, and it is not automatic phone address-book synchronization. An upstream name update does not erase the local name. Local names are applied only to recipients observed in the current remote scan; an old mapping cannot manufacture a current recipient. Use `--clear` to restore upstream naming. Contact search and chat listing use the same name and identifier rules as combined search, including skipping non-recipient system rows.
+
+MCP exposes the reversible local write as `evoctl_write` action `contacts_name`, with `{"jid":"15550000001","name":"Alex Novák"}`; an explicit empty `name` clears it. Read-only mode can search saved names but cannot modify them. Names are not included in `remote list`. Changing saved names invalidates an existing combined-search cursor; start a fresh search rather than mixing cached old names with new ones.
 
 ## Bounds and continuation
 

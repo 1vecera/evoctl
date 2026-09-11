@@ -66,6 +66,40 @@ async def test_mcp_write_shares_cli_idempotency(protocol):
         assert len(state.messages) == 1
 
 
+async def test_saved_contact_names_are_shared_by_cli_and_running_mcp(protocol):
+    """A running MCP process sees CLI name changes and exposes the same reversible local write."""
+    service, state, store = protocol
+    state.contacts[0]["pushName"] = "Jiří"
+    state.chats[0]["pushName"] = None
+    parameters = StdioServerParameters(
+        command=str(Path(sys.executable).with_name("evoctl")),
+        args=["mcp", "serve", "--mode", "write"],
+        env={
+            "EVOCTL_CONFIG_DIR": str(store.directory),
+            "EVOCTL_STATE_DIR": str(service.state),
+            "EVOCTL_TEST_KEY": os.environ["EVOCTL_TEST_KEY"],
+        },
+    )
+    async with Client(parameters, read_timeout_seconds=15) as client:
+        contract = await client.call_tool("evoctl_discover", {"operation": "contacts_name"})
+        assert contract.structured_content["data"]["tool"] == "evoctl_write"
+        cli = command(protocol, "contacts", "name", "15550000001", "Jiří Dvořák")
+        assert cli.returncode == 0 and not state.requests
+        request = {"action": "chats_search", "arguments": {"query": "jiri dvorak"}}
+        found = await client.call_tool("evoctl_read", request)
+        assert not found.is_error and found.structured_content["data"]["chats"] == [
+            {"jid": "15550000001@s.whatsapp.net", "name": "Jiří Dvořák", "kind": "person"}
+        ]
+        cli_search = command(protocol, "chats", "search", "jiri dvorak")
+        assert json.loads(cli_search.stdout) == found.structured_content
+        cleared = await client.call_tool(
+            "evoctl_write", {"action": "contacts_name", "arguments": {"jid": "15550000001", "name": ""}}
+        )
+        assert not cleared.is_error and not cleared.structured_content["data"]["saved"]
+        assert not json.loads(command(protocol, "contacts", "search", "dvorak").stdout)["data"]["contacts"]
+        assert not state.messages
+
+
 @pytest.mark.parametrize("connection", ["open", "close"])
 async def test_bundled_pairing_keeps_qr_image_content(protocol, connection):
     """Pairing through the bundled write tool returns an image only when a phone scan is needed."""

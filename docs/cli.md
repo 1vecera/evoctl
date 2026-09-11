@@ -11,6 +11,8 @@ Select a deployment once with `evoctl remote use NAME`, or put `--profile NAME` 
 | Continue the same search | `evoctl chats search "Alex" --limit 10 --cursor "$NEXT_CURSOR"` |
 | Search only groups | `evoctl chats search "Study" --kind group` |
 | Legacy contacts-only lookup | `evoctl contacts search "Alex" --limit 10` |
+| Save a confirmed name locally | `evoctl contacts name 15550000001 "Alex Novák"` |
+| Remove the saved local name | `evoctl contacts name 15550000001 --clear` |
 | List conversations | `evoctl chats list --limit 20` |
 | Read one conversation | `evoctl messages read 15550000001 --limit 20` |
 | Preview exact text | `evoctl messages send 15550000001 --text 'Hello' --dry-run` |
@@ -35,6 +37,8 @@ For instance creation, media, groups, integrations, and the rest of the REST sur
 ## Search recipients
 
 `chats search` searches personal contact/display names, group names/subjects and JID/phone substrings together, ignoring case and diacritics. It returns `data.chats` with exact `jid`, `name` and `kind` (`person` or `group`). A blank query lists discovered recipients; `--kind person` or `--kind group` is optional. This is recipient discovery, not full-text message search. Multiple name matches remain separate: select and review the exact recipient before sending.
+
+If WhatsApp shows a full name but Evolution returns only a first name or no name, use `contacts name` with the confirmed exact recipient. The local name appears in both searches and chat listing; `Alex Novak` matches saved `Alex Novák`. This does not rename or synchronize the phone address book. See [local name storage and scope](recipient-search.md#names-missing-from-evolution). Start a fresh combined search after changing local names.
 
 Follow `next_cursor` using the same query, kind, limit, scan_pages, group_timeout, profile and state directory. `--scan-pages` defaults to 5 and allows 1–20 pages of 100 rows per paginated source per call. An empty `chats` array with `complete: false` does not establish that no recipient matches. `next_cursor: null` can also accompany an incomplete result when a source failed or reached a hard bound.
 
