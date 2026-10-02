@@ -8,6 +8,7 @@ import json
 import os
 import re
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -16,7 +17,7 @@ from typing import Any
 from pydantic import BaseModel, ValidationError
 
 from evoctl.catalog import ACCESS, Catalog, Mode
-from evoctl.config import ConfigStore, private_directory, state_directory
+from evoctl.config import ConfigStore, ReadFallbacks, private_directory, state_directory
 from evoctl.contact_import import parse_contacts
 from evoctl.contact_names import ContactNames
 from evoctl.ledger import SendLedger
@@ -37,6 +38,7 @@ from evoctl.models import (
     MessageStatus,
     ProfileAdd,
     ProfileInput,
+    ProfileUse,
     RequestStatus,
     ServicesOperation,
 )
@@ -72,6 +74,21 @@ TOOLS = (
         "admin",
     ),
     ToolDefinition(
+        "remote_use",
+        "Select the default connection",
+        "Select a saved default for future unpinned CLI and MCP calls; both connections stay available.",
+        ProfileUse,
+        "write",
+    ),
+    ToolDefinition(
+        "read_fallbacks_set",
+        "Configure automatic read fallback",
+        "Save ordered alternate profiles for new chat/contact/history reads when the default is unavailable. "
+        "An empty list disables fallback. Sends, receipts, diagnostics, and explicit profiles stay pinned.",
+        ReadFallbacks,
+        "write",
+    ),
+    ToolDefinition(
         "remote_connect",
         "Connect a remote host",
         "Verify SSH and install the worker. Use the interactive CLI login command for trust or password prompts.",
@@ -97,6 +114,14 @@ TOOLS = (
         "Inspect deployment health",
         "Report SSH, runtime, containers, API authentication, and WhatsApp connection state independently.",
         ProfileInput,
+        "read",
+    ),
+    ToolDefinition(
+        "remotes_status",
+        "Inspect all connections",
+        "Check every saved profile independently, preserving failures alongside healthy connections. "
+        "Does not switch the default or retry operations on another deployment.",
+        EmptyInput,
         "read",
     ),
     ToolDefinition(
@@ -233,6 +258,24 @@ TOOLS = (
     ),
 )
 
+FALLBACK_READS = {"contacts_search", "chats_search", "chats_list", "messages_read"}
+
+
+def can_fallback(result: Envelope) -> bool:
+    """Retry only availability failures, preserving useful partial matches and caller errors."""
+    if result.ok or result.error is None:
+        return False
+    errors = [result.error]
+    if result.error["code"] == "SEARCH_PARTIAL":
+        if result.data["chats"]:
+            return False
+        errors = [source["error"] for source in result.data["sources"].values() if source["status"] == "failed"]
+    return bool(errors) and all(
+        error["code"] in {"API_UNREACHABLE", "COMMAND_TIMEOUT", "SSH_FAILED", "SSH_TIMEOUT", "SSH_DNS"}
+        or (error["code"] == "API_REJECTED" and error["retryable"])
+        for error in errors
+    )
+
 
 def normalize_jid(value: str) -> str:
     """Accept explicit international numbers and WhatsApp JIDs; never infer a recipient from a name."""
@@ -293,19 +336,25 @@ class Service:
             if "profile" in definition.input_model.model_fields and not arguments.get("profile"):
                 arguments = {**arguments, "profile": self.default_profile}
             parameters = definition.input_model.model_validate(arguments)
-            data = getattr(self, name)(parameters)
-            result = Envelope(ok=True, data=data)
-            if name == "chats_search" and data["partial"]:
-                result = Envelope(
-                    ok=False,
-                    data=data,
-                    error=EvoError(
-                        "SEARCH_PARTIAL",
-                        "One or more recipient sources failed; available matches are in data.chats.",
-                        "Inspect data.sources. Follow next_cursor for remaining scans; "
-                        "start a new search to retry failures.",
-                    ).as_dict(),
-                )
+            fallbacks = (
+                self.store.read_fallbacks().profiles if name in FALLBACK_READS and not arguments.get("profile") else []
+            )
+            if fallbacks:
+                result = self.read_with_fallback(name, parameters, fallbacks, max_output_bytes)
+            else:
+                data = getattr(self, name)(parameters)
+                result = Envelope(ok=True, data=data)
+                if name == "chats_search" and data["partial"]:
+                    result = Envelope(
+                        ok=False,
+                        data=data,
+                        error=EvoError(
+                            "SEARCH_PARTIAL",
+                            "One or more recipient sources failed; available matches are in data.chats.",
+                            "Inspect data.sources. Follow next_cursor for remaining scans; "
+                            "start a new search to retry failures.",
+                        ).as_dict(),
+                    )
             if len(result.model_dump_json().encode()) > max_output_bytes:
                 raise EvoError(
                     "OUTPUT_LIMIT",
@@ -335,6 +384,50 @@ class Service:
         """Resolve the named deployment separately for every operation."""
         name, settings = self.store.resolve(profile)
         return Transport(name, settings, self.state)
+
+    def read_with_fallback(
+        self, operation: str, parameters: BaseModel, fallbacks: list[str], max_output_bytes: int
+    ) -> Envelope:
+        """Route a whole read to one ready backend, keeping continuations and mutations out of failover."""
+        arguments = parameters.model_dump()
+        if arguments.get("cursor") or arguments.get("page", 1) > 1 or arguments.get("offset", 0) > 0:
+            raise EvoError(
+                "PROFILE_REQUIRED",
+                "Paginated reads with fallback enabled need an explicit profile.",
+                "Use the connection.profile returned by the first page.",
+            )
+        preferred, _ = self.store.resolve()
+        selected = ""
+        failures = []
+        result = Envelope(
+            ok=False, error=EvoError("NO_READY_CONNECTION", "No configured read connection is ready.").as_dict()
+        )
+        for profile in dict.fromkeys([preferred, *fallbacks]):
+            health = self.invoke("status", {"profile": profile})
+            if not health.ok or not health.data["ready"]:
+                error = health.error if not health.ok else health.data.get("connection_error")
+                failures.append(
+                    {
+                        "profile": profile,
+                        "error": error or EvoError("CONNECTION_NOT_READY", "WhatsApp is not connected.").as_dict(),
+                    }
+                )
+                continue
+            selected = profile
+            result = self.invoke(operation, {**arguments, "profile": profile}, max_output_bytes)
+            if not can_fallback(result):
+                break
+            failures.append({"profile": profile, "error": result.error})
+        result.data = {
+            **(result.data or {}),
+            "connection": {
+                "profile": selected,
+                "preferred": preferred,
+                "fallback_used": bool(selected) and selected != preferred,
+                "failures": failures,
+            },
+        }
+        return result
 
     def scope(self, transport: Transport) -> str:
         """Bind idempotency to the actual configured target, not an ephemeral SSH socket."""
@@ -366,6 +459,14 @@ class Service:
         """Save a validated connection profile."""
         return self.store.add(arguments.name, arguments.settings, arguments.replace)
 
+    def remote_use(self, arguments: ProfileUse) -> dict[str, str]:
+        """Share explicit default selection across CLI and MCP, without touching live sessions."""
+        return self.store.use(arguments.name)
+
+    def read_fallbacks_set(self, arguments: ReadFallbacks) -> dict[str, list[str]]:
+        """Persist an explicit list of alternate read connections for both interfaces."""
+        return self.store.set_read_fallbacks(arguments)
+
     def remote_connect(self, arguments: ProfileInput) -> dict[str, Any]:
         """Prepare remote execution over existing SSH access."""
         return self.transport(arguments.profile).connect()
@@ -395,6 +496,22 @@ class Service:
                 "ready": False,
                 "connection_error": error.as_dict(),
             }
+
+    def remotes_status(self, _: EmptyInput) -> dict[str, Any]:
+        """Check independent connections concurrently, retaining per-profile diagnostics on failure."""
+        configuration = self.store.load()
+        names = list(configuration.profiles)
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            results = executor.map(lambda name: self.invoke("status", {"profile": name}), names)
+            reports = [
+                result.data if result.ok else {"profile": name, "ready": False, "connection_error": result.error}
+                for name, result in zip(names, results, strict=True)
+            ]
+        return {
+            "default": self.default_profile or configuration.default,
+            "profiles": reports,
+            "ready": bool(reports) and all(report["ready"] for report in reports),
+        }
 
     def services_manage(self, arguments: ServicesOperation) -> dict[str, Any]:
         """Start or restart the explicitly configured deployment."""

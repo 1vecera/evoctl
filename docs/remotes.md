@@ -16,11 +16,13 @@ Use an existing SSH alias to carry ports, jump hosts, VPN names, and other OpenS
 
 `remote login NAME` is interactive. It allows the user to verify the server's host key and enter a password. The connection can remain multiplexed for ten minutes after exit. `remote key-setup NAME` then installs a dedicated public key through existing access and independently verifies that key before saving its path in the profile.
 
-The dedicated private key has no passphrase and lives in the private state directory. To use a passphrase-protected or hardware-backed key instead, configure it through your SSH agent or `--identity-file` when adding the profile. The tool never disables host-key verification or rewrites global SSH configuration. Disconnect closes only evoctl's own connection and GUI forwards.
+The dedicated private key has no passphrase and lives in the private state directory. To use a passphrase-protected or hardware-backed key instead, configure it through your SSH agent or `--identity-file` when adding the profile. The tool never disables host-key verification or rewrites global SSH configuration. Each profile and SSH identity has its own connection and GUI forwards, including profiles on the same host. Disconnecting one profile leaves the others connected. Connections created by older versions expire normally; new versions use the isolated sockets.
 
 For Docker, `--docker` discovers a unique image containing `evolution-api`. `--api-container NAME` selects one explicitly. The worker captures `AUTHENTICATION_API_KEY` from that container in memory; the value is never returned to the caller. For `--key-env NAME`, the variable must exist in the environment of the process running the API request. An SSH profile therefore needs it in the remote worker environment, not merely in the local shell.
 
 ## Services and pairing
+
+For a new local backend and its bundled Manager frontend, see [local deployment](local-deployment.md). Existing remote deployments can remain connected alongside it.
 
 `services start` starts existing Compose siblings, with the API container last. `services restart` restarts them. An explicit `--runtime colima` profile permits starting a stopped Colima VM. Other Docker runtimes remain externally managed. Without Compose labels, the profile can name additional existing `service_containers` through the structured `remote_add` tool or configuration file.
 
@@ -33,6 +35,7 @@ Service startup cannot restore a missing deployment. Review your installation an
 | Purpose | Default location |
 | --- | --- |
 | Profiles | `~/.config/evoctl/config.json` |
+| Optional read fallback policy | `~/.config/evoctl/read-fallbacks.json` |
 | Receipts, owned SSH sockets, dedicated keys, pairing images | `~/.local/state/evoctl/` |
 | Remote worker versions | `~/.local/share/evoctl/workers/` on the SSH host |
 

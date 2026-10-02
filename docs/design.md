@@ -10,6 +10,7 @@ evoctl gives people and agent clients one interface to Evolution API, whether it
 - A status report distinguishes SSH, runtime, containers, API authentication, WhatsApp pairing, and delivery. Starting services does not recreate missing data volumes or instances.
 - Message sends use a durable idempotency ledger. Reusing a key with the same payload returns the first result. Reusing it with another payload is an error. An uncertain network outcome cannot trigger a second send.
 - MCP uses stdio, structured results, tool annotations, and explicit profile arguments. It does not expose an unauthenticated network listener or arbitrary shell execution.
+- Automatic fallback is opt-in for new chat/contact/history reads. Routing probes the saved default first on each call, then configured alternates, and reports the selected source. Explicit targets, continuations, receipts, raw REST calls, and all writes remain pinned. Query retries are limited to availability failures and never replay mutations.
 - Bundling trades an extra schema-discovery call for a smaller initial tool manifest. Read and write remain separate so the MCP annotations stay meaningful. Execution is not a free-form dispatcher: the selected action and its arguments are checked against the operation registry.
 
 ## Acceptance

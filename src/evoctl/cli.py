@@ -18,7 +18,7 @@ from typer._click.exceptions import ClickException
 
 from evoctl import __version__
 from evoctl.catalog import Mode
-from evoctl.config import ConfigStore, Profile, atomic_write
+from evoctl.config import Profile, atomic_write
 from evoctl.contact_import import MAX_CSV_BYTES
 from evoctl.mcp_server import serve
 from evoctl.models import Envelope
@@ -70,6 +70,7 @@ def emit(result: Envelope, output_file: Path | None = None) -> None:
             "INVALID_RECIPIENT": 2,
             "INVALID_BODY": 2,
             "INVALID_PARAMETERS": 2,
+            "PROFILE_REQUIRED": 2,
             "CAPABILITY_DENIED": 3,
             "API_UNAUTHORIZED": 3,
             "SSH_AUTH_REQUIRED": 3,
@@ -156,14 +157,21 @@ def remote_list(context: typer.Context) -> None:
 
 
 @remote_app.command("use")
-def remote_use(name: str) -> None:
+def remote_use(context: typer.Context, name: str) -> None:
     """Set the default profile for later CLI and MCP calls."""
-    store = ConfigStore()
-    name, _ = store.resolve(name)
-    configuration = store.load()
-    configuration.default = name
-    store.save(configuration)
-    emit(Envelope(ok=True, data={"default": name}))
+    invoke(context, "remote_use", name=name)
+
+
+@remote_app.command("fallback")
+def remote_fallback(
+    context: typer.Context,
+    names: Annotated[list[str] | None, typer.Argument(help="Alternate profiles in priority order.")] = None,
+    clear: Annotated[bool, typer.Option(help="Disable automatic read fallback.")] = False,
+) -> None:
+    """Configure fallback for new chat/contact/history reads; sends and explicit targets stay pinned."""
+    if bool(names) == clear:
+        emit(Envelope(ok=False, error=EvoError("INVALID_INPUT", "Provide profile names or --clear.").as_dict()))
+    invoke(context, "read_fallbacks_set", profiles=names or [])
 
 
 @remote_app.command("connect")
@@ -196,15 +204,22 @@ def remote_disconnect(context: typer.Context, name: Annotated[str, typer.Argumen
 @app.command("status")
 def status(
     context: typer.Context,
+    all_profiles: Annotated[bool, typer.Option("--all", help="Check all saved connections independently.")] = False,
     watch: bool = False,
     interval: Annotated[float, typer.Option(min=1, max=3600)] = 5,
     count: Annotated[int, typer.Option(min=0, help="Watch samples; zero continues until interrupted.")] = 0,
 ) -> None:
     """Inspect readiness; --watch emits one JSON snapshot per line."""
+    if all_profiles and context.obj.profile:
+        emit(Envelope(ok=False, error=EvoError("INVALID_INPUT", "Choose --all or --profile, not both.").as_dict()))
     service = Service()
     iteration = 0
     while True:
-        result = service.invoke("status", {"profile": context.obj.profile})
+        result = (
+            service.invoke("remotes_status", {})
+            if all_profiles
+            else service.invoke("status", {"profile": context.obj.profile})
+        )
         emit(result, context.obj.output_file)
         iteration += 1
         if not watch or (count and iteration >= count):
@@ -215,9 +230,12 @@ def status(
 
 
 @app.command("doctor")
-def doctor(context: typer.Context) -> None:
+def doctor(
+    context: typer.Context,
+    all_profiles: Annotated[bool, typer.Option("--all", help="Diagnose all saved connections independently.")] = False,
+) -> None:
     """Inspect the same readiness stages and actionable failure hints as status."""
-    status(context)
+    status(context, all_profiles=all_profiles)
 
 
 @contacts_app.command("search")
