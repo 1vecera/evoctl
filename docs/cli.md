@@ -5,6 +5,7 @@ Select a deployment once with `evoctl remote use NAME`, or put `--profile NAME` 
 | Task | Command |
 | --- | --- |
 | Inspect readiness | `evoctl status` or `evoctl doctor` |
+| Inspect every connection | `evoctl status --all` or `evoctl doctor --all` |
 | Monitor continuously | `evoctl status --watch --interval 5` |
 | List profiles | `evoctl remote list` |
 | Find people and groups | `evoctl chats search "Alex" --limit 10` |

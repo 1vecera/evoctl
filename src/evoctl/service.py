@@ -8,6 +8,7 @@ import json
 import os
 import re
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -37,6 +38,7 @@ from evoctl.models import (
     MessageStatus,
     ProfileAdd,
     ProfileInput,
+    ProfileUse,
     RequestStatus,
     ServicesOperation,
 )
@@ -72,6 +74,13 @@ TOOLS = (
         "admin",
     ),
     ToolDefinition(
+        "remote_use",
+        "Select the default connection",
+        "Select a saved default for future unpinned CLI and MCP calls; both connections stay available.",
+        ProfileUse,
+        "write",
+    ),
+    ToolDefinition(
         "remote_connect",
         "Connect a remote host",
         "Verify SSH and install the worker. Use the interactive CLI login command for trust or password prompts.",
@@ -97,6 +106,14 @@ TOOLS = (
         "Inspect deployment health",
         "Report SSH, runtime, containers, API authentication, and WhatsApp connection state independently.",
         ProfileInput,
+        "read",
+    ),
+    ToolDefinition(
+        "remotes_status",
+        "Inspect all connections",
+        "Check every saved profile independently, preserving failures alongside healthy connections. "
+        "Does not switch the default or retry operations on another deployment.",
+        EmptyInput,
         "read",
     ),
     ToolDefinition(
@@ -366,6 +383,10 @@ class Service:
         """Save a validated connection profile."""
         return self.store.add(arguments.name, arguments.settings, arguments.replace)
 
+    def remote_use(self, arguments: ProfileUse) -> dict[str, str]:
+        """Share explicit default selection across CLI and MCP, without touching live sessions."""
+        return self.store.use(arguments.name)
+
     def remote_connect(self, arguments: ProfileInput) -> dict[str, Any]:
         """Prepare remote execution over existing SSH access."""
         return self.transport(arguments.profile).connect()
@@ -395,6 +416,22 @@ class Service:
                 "ready": False,
                 "connection_error": error.as_dict(),
             }
+
+    def remotes_status(self, _: EmptyInput) -> dict[str, Any]:
+        """Check independent connections concurrently, retaining per-profile diagnostics on failure."""
+        configuration = self.store.load()
+        names = list(configuration.profiles)
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            results = executor.map(lambda name: self.invoke("status", {"profile": name}), names)
+            reports = [
+                result.data if result.ok else {"profile": name, "ready": False, "connection_error": result.error}
+                for name, result in zip(names, results, strict=True)
+            ]
+        return {
+            "default": self.default_profile or configuration.default,
+            "profiles": reports,
+            "ready": bool(reports) and all(report["ready"] for report in reports),
+        }
 
     def services_manage(self, arguments: ServicesOperation) -> dict[str, Any]:
         """Start or restart the explicitly configured deployment."""

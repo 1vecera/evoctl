@@ -19,6 +19,12 @@ class EmptyInput(Input):
     """No arguments are needed for profile discovery."""
 
 
+class ProfileUse(Input):
+    """Select an existing default explicitly, without connecting or disconnecting it."""
+
+    name: str = Field(min_length=1, max_length=48, description="Existing profile to use as the saved default.")
+
+
 class ProfileInput(Input):
     """Select a named deployment or its configured default."""
 

@@ -36,8 +36,9 @@ class Transport:
         self.remote_path = f".local/share/evoctl/workers/{self.worker_hash}.py"
 
     def control_path(self) -> Path:
-        """Use a private, predictable socket for only this application's SSH master."""
-        digest = hashlib.sha256(self.profile.ssh_host.encode()).hexdigest()[:16]
+        """Keep each profile and SSH identity on its own private connection and GUI forwards."""
+        identity = [self.name, self.profile.ssh_host, self.profile.identity_file]
+        digest = hashlib.sha256(json.dumps(identity).encode()).hexdigest()[:16]
         directory = private_directory(self.state / "ssh")
         path = directory / digest
         if len(str(path).encode()) > 100:

@@ -24,7 +24,15 @@ Read the selected conversation with:
 {"action":"messages_read","arguments":{"chat":"15550000001@s.whatsapp.net","limit":10}}
 ```
 
-Other read actions are `status`, `remotes_list`, `contacts_list`, `chats_list`, `message_status`, and `request_status`. Omit `profile` to select the default, or include it in the operation's `arguments`.
+Other read actions are `status`, `remotes_status`, `remotes_list`, `contacts_list`, `chats_list`, `message_status`, and `request_status`. Omit `profile` to select the default, or include it in the operation's `arguments`.
+
+## Keep local and remote connections available
+
+Use `evoctl_read` with `{"action":"remotes_status"}` to check all configured connections together. Each profile keeps its own readiness and error report; overall `ready` requires every configured profile to be ready. No default is changed and no operation is retried against another backend.
+
+In write or admin mode, select a saved default through `evoctl_write` with `{"action":"remote_use","arguments":{"name":"local"}}`. This changes the same configuration as CLI `evoctl remote use local` and leaves both linked devices connected. A running unpinned MCP server sees the change on its next operation; a server launched with `--profile NAME` stays pinned. Supplying an explicit operation `profile` overrides either default. See [local deployment and dual connections](local-deployment.md).
+
+Receipts belong to the original profile. Never move an uncertain send to the other connection: duplicate suppression does not span independently configured targets.
 
 ## Send reviewed text
 
@@ -75,8 +83,8 @@ The same `api` action exists in `evoctl_write` for permitted mutations. Supply a
 | Server mode | Tool count | Permissions |
 | --- | --- | --- |
 | `read` (default) | 2 | Discovery and read operations. |
-| `write` | 3 | Read operations plus local contact names, messages, pairing, and messaging API writes. |
-| `admin` | 3 | Also profile management, SSH connect/key setup/disconnect, GUI forwarding, service control, and administrative API calls. |
+| `write` | 3 | Read operations plus saved-default selection, local contact names, messages, pairing, and messaging API writes. |
+| `admin` | 3 | Also profile creation/replacement, SSH connect/key setup/disconnect, GUI forwarding, service control, and administrative API calls. |
 
 The read tool cannot perform a mutation, even through `action: api`. The write tool cannot perform administrative operations in write mode. Unavailable operations are excluded from discovery and rejected at execution. Tool annotations remain accurate for the read/write boundary; the write tool conservatively advertises possible destructive effects.
 

@@ -162,6 +162,15 @@ class ConfigStore:
             raise EvoError("PROFILE_NOT_FOUND", "No matching profile is configured.", "Run evoctl remote add --help.")
         return name, configuration.profiles[name]
 
+    def use(self, name: str) -> dict[str, str]:
+        """Select an existing default without changing either deployment's connection settings."""
+        configuration = self.load()
+        if name not in configuration.profiles:
+            raise EvoError("PROFILE_NOT_FOUND", "No matching profile is configured.", "Run evoctl remote list.")
+        configuration.default = name
+        self.save(configuration)
+        return {"default": name}
+
     def listing(self) -> dict[str, object]:
         """Return all credential-free profile settings for discovery."""
         return json.loads(self.load().model_dump_json())
