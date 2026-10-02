@@ -34,7 +34,7 @@ evoctl status
 
 The first profile becomes your default. The remote needs `uv`, SSH access, and Docker access. For a local container, omit `--ssh`; for an HTTPS endpoint, use `--url` and `--key-env`. See [connection options and SSH key setup](docs/remotes.md). Pin a commit SHA in the install URL for reproducible deployments.
 
-Local and remote WhatsApp connections can stay linked at the same time. `evoctl status --all` checks both; `evoctl remote use NAME` selects a default, and `--profile NAME` selects one for a single command. See [installing the local backend and Manager frontend](docs/local-deployment.md) for the private Compose setup and separate linked-device pairing. Connections never fail over automatically.
+Local and remote WhatsApp connections can stay linked at the same time. `evoctl status --all` checks both; `evoctl remote use NAME` selects a default, and `--profile NAME` selects one for a single command. Opt in to automatic chat/contact/history read fallback with `evoctl remote fallback mini`; sends remain on their selected target. See [installing the local backend and Manager frontend](docs/local-deployment.md) for the private Compose setup, pairing, and routing rules.
 
 ### Your next commands
 

@@ -35,6 +35,7 @@ Service startup cannot restore a missing deployment. Review your installation an
 | Purpose | Default location |
 | --- | --- |
 | Profiles | `~/.config/evoctl/config.json` |
+| Optional read fallback policy | `~/.config/evoctl/read-fallbacks.json` |
 | Receipts, owned SSH sockets, dedicated keys, pairing images | `~/.local/state/evoctl/` |
 | Remote worker versions | `~/.local/share/evoctl/workers/` on the SSH host |
 

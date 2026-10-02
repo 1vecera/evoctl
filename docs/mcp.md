@@ -34,6 +34,8 @@ In write or admin mode, select a saved default through `evoctl_write` with `{"ac
 
 Receipts belong to the original profile. Never move an uncertain send to the other connection: duplicate suppression does not span independently configured targets.
 
+To enable automatic fallback for new `chats_search`, `chats_list`, `contacts_search`, and `messages_read` calls, use `evoctl_write` with `{"action":"read_fallbacks_set","arguments":{"profiles":["mini"]}}`. An empty `profiles` list disables it. The default is attempted first on each new read, then the alternates in order. Results identify `data.connection.profile`, `preferred`, `fallback_used`, and prior `failures`. Use the returned `profile` explicitly for pagination; unpinned continuations fail with `PROFILE_REQUIRED`. Explicit operation profiles and pinned servers never fail over. Sends, receipts, local contact operations, diagnostics, and raw REST calls retain their selected profile. See the [routing and retry rules](local-deployment.md#opt-in-to-automatic-read-fallback).
+
 ## Send reviewed text
 
 After authorization for the exact recipient and message, inspect `message_send` with discovery. Call `evoctl_write` with:
@@ -83,7 +85,7 @@ The same `api` action exists in `evoctl_write` for permitted mutations. Supply a
 | Server mode | Tool count | Permissions |
 | --- | --- | --- |
 | `read` (default) | 2 | Discovery and read operations. |
-| `write` | 3 | Read operations plus saved-default selection, local contact names, messages, pairing, and messaging API writes. |
+| `write` | 3 | Read operations plus default/fallback configuration, local contact names, messages, pairing, and messaging API writes. |
 | `admin` | 3 | Also profile creation/replacement, SSH connect/key setup/disconnect, GUI forwarding, service control, and administrative API calls. |
 
 The read tool cannot perform a mutation, even through `action: api`. The write tool cannot perform administrative operations in write mode. Unavailable operations are excluded from discovery and rejected at execution. Tool annotations remain accurate for the read/write boundary; the write tool conservatively advertises possible destructive effects.

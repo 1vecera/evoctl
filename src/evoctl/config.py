@@ -86,6 +86,15 @@ class Configuration(BaseModel):
     profiles: dict[str, Profile] = Field(default_factory=dict)
 
 
+class ReadFallbacks(BaseModel):
+    """Opt in to ordered alternate targets for new chat, contact, and history reads."""
+
+    model_config = ConfigDict(extra="forbid")
+    profiles: list[str] = Field(
+        max_length=8, description="Existing fallback profiles in priority order; an empty list disables fallback."
+    )
+
+
 def config_directory() -> Path:
     """Locate user configuration without relying on a repository working directory."""
     if "EVOCTL_CONFIG_DIR" in os.environ:
@@ -173,4 +182,22 @@ class ConfigStore:
 
     def listing(self) -> dict[str, object]:
         """Return all credential-free profile settings for discovery."""
-        return json.loads(self.load().model_dump_json())
+        return {**json.loads(self.load().model_dump_json()), "read_fallbacks": self.read_fallbacks().profiles}
+
+    def read_fallbacks(self) -> ReadFallbacks:
+        """Read opt-in routing separately so older clients can still load the profile configuration."""
+        path = self.directory / "read-fallbacks.json"
+        return ReadFallbacks.model_validate_json(path.read_text()) if path.exists() else ReadFallbacks(profiles=[])
+
+    def set_read_fallbacks(self, settings: ReadFallbacks) -> dict[str, list[str]]:
+        """Validate every alternate target before atomically saving the read-only routing policy."""
+        configuration = self.load()
+        if any(name not in configuration.profiles for name in settings.profiles):
+            raise EvoError(
+                "PROFILE_NOT_FOUND", "Every fallback must be an existing profile.", "Run evoctl remote list."
+            )
+        if len(set(settings.profiles)) != len(settings.profiles):
+            raise EvoError("INVALID_INPUT", "Fallback profiles must be unique.")
+        private_directory(self.directory)
+        atomic_write(self.directory / "read-fallbacks.json", settings.model_dump_json(indent=2) + "\n")
+        return {"read_fallbacks": settings.profiles}

@@ -8,6 +8,8 @@ Select a deployment once with `evoctl remote use NAME`, or put `--profile NAME` 
 | Inspect every connection | `evoctl status --all` or `evoctl doctor --all` |
 | Monitor continuously | `evoctl status --watch --interval 5` |
 | List profiles | `evoctl remote list` |
+| Set alternate read connections | `evoctl remote fallback mini` |
+| Disable automatic read fallback | `evoctl remote fallback --clear` |
 | Find people and groups | `evoctl chats search "Alex" --limit 10` |
 | Continue the same search | `evoctl chats search "Alex" --limit 10 --cursor "$NEXT_CURSOR"` |
 | Search only groups | `evoctl chats search "Study" --kind group` |

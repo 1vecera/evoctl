@@ -70,6 +70,7 @@ def emit(result: Envelope, output_file: Path | None = None) -> None:
             "INVALID_RECIPIENT": 2,
             "INVALID_BODY": 2,
             "INVALID_PARAMETERS": 2,
+            "PROFILE_REQUIRED": 2,
             "CAPABILITY_DENIED": 3,
             "API_UNAUTHORIZED": 3,
             "SSH_AUTH_REQUIRED": 3,
@@ -159,6 +160,18 @@ def remote_list(context: typer.Context) -> None:
 def remote_use(context: typer.Context, name: str) -> None:
     """Set the default profile for later CLI and MCP calls."""
     invoke(context, "remote_use", name=name)
+
+
+@remote_app.command("fallback")
+def remote_fallback(
+    context: typer.Context,
+    names: Annotated[list[str] | None, typer.Argument(help="Alternate profiles in priority order.")] = None,
+    clear: Annotated[bool, typer.Option(help="Disable automatic read fallback.")] = False,
+) -> None:
+    """Configure fallback for new chat/contact/history reads; sends and explicit targets stay pinned."""
+    if bool(names) == clear:
+        emit(Envelope(ok=False, error=EvoError("INVALID_INPUT", "Provide profile names or --clear.").as_dict()))
+    invoke(context, "read_fallbacks_set", profiles=names or [])
 
 
 @remote_app.command("connect")

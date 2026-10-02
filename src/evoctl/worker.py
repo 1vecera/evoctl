@@ -185,7 +185,7 @@ def api_request(profile: dict[str, Any], request: dict[str, Any]) -> dict[str, A
             code,
             f"Evolution API returned HTTP {error.code}.",
             "Check the instance, operation schema, and API credential.",
-            error.code == 429,
+            error.code == 429 or (500 <= error.code < 600 and request.get("read_only", False)),
         ) from None
     except (TimeoutError, urllib.error.URLError, ConnectionError):
         raise EvoError(

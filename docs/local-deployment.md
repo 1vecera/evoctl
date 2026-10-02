@@ -42,6 +42,23 @@ evoctl --profile local chats list --limit 10
 
 `remote use` saves the default shared by CLI and unpinned MCP sessions; it does not disconnect either linked device. Explicit `--profile NAME` (or an MCP operation's `profile`) always wins. A server started with `evoctl --profile NAME mcp serve` stays pinned to that profile even after the saved default changes.
 
-Each backend keeps its own synchronized history. Receipts, saved contact names, and search cursors are scoped to the selected target on the client. Never retry an uncertain send on the other connection: its ledger cannot prove whether the first connection sent it. Check the request and delivery receipt on the original profile. evoctl does not automatically fail over reads or writes.
+## Opt in to automatic read fallback
+
+After verifying that both profiles address the intended WhatsApp account, configure alternate read connections in priority order:
+
+```bash
+evoctl remote use local
+evoctl remote fallback mini
+evoctl chats list --limit 10
+evoctl remote list
+```
+
+New `chats search`, `chats list`, `contacts search`, and `messages read` operations try the default first, then the configured alternates when a connection is unavailable or unpaired. A timeout or HTTP 5xx during the read can also retry the whole operation on another backend. Empty successful results, query validation/authentication failures, rate limits, and searches with useful partial matches do not trigger retries. Every new read prefers the default again, so recovery is automatic without changing the saved default.
+
+Routed results include `data.connection`: the selected `profile`, the `preferred` default, `fallback_used`, and prior `failures`. For subsequent pages, reuse `connection.profile` explicitly with `--profile NAME` or the MCP `profile` argument. Unpinned continuations return `PROFILE_REQUIRED` instead of mixing histories or cursors. Explicit profiles and MCP servers launched with `--profile NAME` never fail over.
+
+Writes, local contact storage, delivery/request receipts, status/doctor, Manager, and raw REST calls retain their selected profile. Each backend keeps its own synchronized history. Receipts, saved contact names, and search cursors are scoped to the selected target on the client. Never retry an uncertain send on the other connection: its ledger cannot prove whether the first connection sent it. Check the request and delivery receipt on the original profile.
+
+`evoctl remote fallback --clear` disables automatic fallback. The optional policy is stored in `read-fallbacks.json` beside `config.json`, keeping the profiles file compatible with older clients. Restart existing MCP processes after upgrading to activate routing; upgraded running clients read policy changes on their next operation.
 
 Containers restart automatically unless explicitly stopped. `docker compose stop` preserves the deployment and all volumes. Do not use `down --volumes` to repair pairing.
