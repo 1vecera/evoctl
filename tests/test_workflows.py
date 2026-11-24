@@ -44,6 +44,18 @@ def test_send_history_and_delivery_are_distinct(protocol):
     assert read.data["status"] == "read" and read.data["delivery_confirmed"]
 
 
+def test_history_reads_a_record_without_a_message_body(protocol):
+    """A record whose message is null, as Evolution stores some, is listed with empty text instead of failing."""
+    service, state, _ = protocol
+    sent = service.invoke("message_send", {"to": "+15550000001", "text": "First", "request_id": "first"})
+    assert sent.ok
+    state.messages[0]["message"] = None
+    history = service.invoke("messages_read", {"chat": "15550000001", "limit": 2})
+    assert history.ok and history.data["total"] == 1
+    assert history.data["messages"][0]["id"] == sent.data["message_id"]
+    assert history.data["messages"][0]["text"] == ""
+
+
 def test_duplicate_send_is_suppressed_across_service_instances(protocol):
     """A durable request ID survives process-equivalent service reconstruction."""
     service, state, store = protocol

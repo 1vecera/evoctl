@@ -646,7 +646,8 @@ class Service:
         page = response["messages"]
         messages = []
         for record in page["records"]:
-            content = record["message"]
+            # Evolution stores some records without a body (seen on a "conversation" record): they have no text.
+            content = record["message"] or {}
             text = content.get("conversation", "")
             if not text:
                 for field in ("extendedTextMessage", "imageMessage", "videoMessage", "documentMessage"):
